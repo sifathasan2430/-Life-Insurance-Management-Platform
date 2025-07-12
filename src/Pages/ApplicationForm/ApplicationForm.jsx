@@ -8,8 +8,8 @@ import Swal from 'sweetalert2';
 
 const ApplicationForm = () => {
   const { state } = useLocation();
-
-  const policyTitle = state?.policy;
+console.log(state)
+  const policy = state?.policyTitle;
   const policyId = state?.policyId;
 
 
@@ -43,49 +43,60 @@ const ApplicationForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+
+  try {
+    // 1️⃣ Fetch policy details using policyId
+    const policyRes = await secureAxios.get(`/policy/${policyId}`);
+    const policyData = policyRes.data;
+
+    // 2️⃣ Merge everything into the final application data
     const payload = {
       ...formData,
-      policyTitle,
-      policyId,
+      policyTitle: policyData.title,
+      policyId: policyId,
+      baseRate: policyData.baseRate,
+      paymentFrequency: policyData.paymentFrequency,
+      currency: policyData.currency,
       status: 'Pending',
-      assignAgent: 'Not Assigned',
+      assignedAgent: null,
       createdAt: new Date().toISOString(),
     };
-try {
-  const res = await secureAxios.post('/applications', payload);
 
-  if (res.status === 200 || res.status === 201) {
+    // 3️⃣ Submit application
+    const res = await secureAxios.post('/applications', payload);
+
+    if (res.status === 200 || res.status === 201) {
+      Swal.fire({
+        title: 'Success!',
+        text: 'Application submitted successfully!',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#ff8c00'
+      });
+    } else {
+      Swal.fire({
+        title: 'Failed!',
+        text: 'Something went wrong while submitting.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    }
+  } catch (error) {
+    console.error(error);
     Swal.fire({
-      title: 'Success!',
-      text: 'Application submitted successfully!',
-      icon: 'success',
-      confirmButtonText: 'OK',
-      confirmButtonColor: '#ff8c00'
-    });
-  } else {
-    Swal.fire({
-      title: 'Failed!',
-      text: 'Something went wrong while submitting.',
+      title: 'Error!',
+      text: 'An unexpected error occurred.',
       icon: 'error',
       confirmButtonText: 'OK',
     });
   }
-} catch (error) {
-  console.error(error);
-  Swal.fire({
-    title: 'Error!',
-    text: 'An unexpected error occurred.',
-    icon: 'error',
-    confirmButtonText: 'OK',
-  });
-}
-    
-  };
+};
+
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <h1 className="text-2xl font-bold mb-6 text-center">Apply for: {policyTitle}</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">Apply for: {policy}</h1>
 
       <form onSubmit={handleSubmit} className="grid gap-4">
         {/* Personal Info */}

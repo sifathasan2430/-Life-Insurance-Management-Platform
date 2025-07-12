@@ -20,11 +20,21 @@ const Navbar = () => {
   const navLinks = (
     <>
       <NavLink to="/" className="hover:text-orange-500 transition">Home</NavLink>
-      <NavLink to="/policies" className="hover:text-orange-500 transition">All Policies</NavLink>
+      <NavLink to="/all-policies" className="hover:text-orange-500 transition">All Policies</NavLink>
       <NavLink to="/agent-form" className="hover:text-orange-500 transition">Be A Agent</NavLink>
       <NavLink to="/faqs" className="hover:text-orange-500 transition">FAQs</NavLink>
+      <NavLink to="/blog" className="hover:text-orange-500 transition">Blogs</NavLink>
        { (
         <NavLink to="/admin/dashboard" className="hover:text-orange-500 transition">Dashboard</NavLink>
+      )}
+      { (
+        <NavLink to="/agent/dashboard" className="hover:text-orange-500 transition">AgentDashboard</NavLink>
+      )}
+       { (
+        <NavLink to="/customer/dashboard" className="hover:text-orange-500 transition">UserDashboard</NavLink>
+      )}
+       { (
+        <NavLink to="/claimRequest" className="hover:text-orange-500 transition">ClaimRequest</NavLink>
       )}
     </>
   );
@@ -98,7 +108,7 @@ const Navbar = () => {
                 </Link>
               </div>
             ) : (
-              <Button onClick={logOut} variant="destructive" size="sm" className="w-full">
+              <Button onClick={()=> logout()} variant="destructive" size="sm" className="w-full">
                 Logout
               </Button>
             )}

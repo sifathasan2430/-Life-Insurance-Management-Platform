@@ -22,7 +22,7 @@ const QuotePage = () => {
 
   const policy = location.state?.policyTitle || {};
   const policyId = location.state?.policyId || "";
-
+;
   const [premium, setPremium] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -162,6 +162,7 @@ const QuotePage = () => {
                 state: {
                   policyId,
                   policy,
+                  status
                 },
               })
             }

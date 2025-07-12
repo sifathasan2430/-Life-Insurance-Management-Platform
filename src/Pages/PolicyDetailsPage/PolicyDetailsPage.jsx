@@ -33,7 +33,7 @@ const PolicyDetailsPage = () => {
   if (isError || !policy) {
     return <div className="text-center mt-10 text-red-600">Policy not found.</div>;
   }
-
+  console.log(policy);
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
@@ -87,8 +87,10 @@ const PolicyDetailsPage = () => {
               className="bg-[#ff8c00] text-white hover:bg-[#e67300]"
               onClick={() => navigate(`/quote/${policy._id}`,{
                 state: {
-    policyTitle: policy.title,
-    policyId: policy._id, 
+    policyTitle: policy?.title,
+    policyId: policy?._id,
+   
+     
   },
               })}
             >

@@ -20,7 +20,7 @@ const Login = () => {
     try {
       await signInUser(data.email, data.password);
       toast.success("Login successful!");
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       toast.error("Invalid credentials");
     } finally {
@@ -32,7 +32,7 @@ const Login = () => {
     try {
       await loginWithGoogle();
       toast.success("Logged in with Google");
-      navigate("/dashboard");
+      navigate("/");
     } catch (err) {
       toast.error("Google login failed");
     }

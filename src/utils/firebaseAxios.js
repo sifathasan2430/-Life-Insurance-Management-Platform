@@ -1,10 +1,10 @@
 import axios from "axios";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import {  onAuthStateChanged } from "firebase/auth";
+import auth from '../Firebase/Firebase.config';
 
-const auth = getAuth();
 
 const secureAxios = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://life-insurance-server.vercel.app/api",
 });
 
 // This ensures the token is only requested when auth is ready

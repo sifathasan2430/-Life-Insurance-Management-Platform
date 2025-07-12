@@ -32,6 +32,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { toast } from "sonner";
 import secureAxios from "../../utils/firebaseAxios";
 
@@ -39,6 +40,7 @@ const ManagePolicies = () => {
   const queryClient = useQueryClient();
   const [editingPolicy, setEditingPolicy] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -49,6 +51,8 @@ const ManagePolicies = () => {
     duration: "",
     baseRate: "",
     image: "",
+    currency: "",
+    paymentFrequency: "",
   });
 
   const { data: policies = [], isLoading } = useQuery({
@@ -65,16 +69,23 @@ const ManagePolicies = () => {
   };
 
   const handleSubmit = async () => {
+    const payload = {
+      ...formData,
+      minAge: parseInt(formData.minAge),
+      maxAge: parseInt(formData.maxAge),
+      baseRate: parseFloat(formData.baseRate),
+    };
+
     try {
       if (editingPolicy) {
-        const res = await secureAxios.patch(`/policies/${editingPolicy._id}`, formData);
+        const res = await secureAxios.patch(`/policies/${editingPolicy._id}`, payload);
         if (res.data?.modifiedCount > 0) {
           toast.success("Policy updated successfully");
         } else {
           toast.info("No changes made");
         }
       } else {
-        const res = await secureAxios.post("/policies", formData);
+        const res = await secureAxios.post("/policies", payload);
         toast.success(res.data.message || "Policy created successfully");
       }
       queryClient.invalidateQueries(["policies"]);
@@ -94,6 +105,8 @@ const ManagePolicies = () => {
         duration: "",
         baseRate: "",
         image: "",
+        currency: "",
+        paymentFrequency: "",
       });
     }
   };
@@ -110,6 +123,8 @@ const ManagePolicies = () => {
       duration: policy.duration,
       baseRate: policy.baseRate,
       image: policy.image,
+      currency: policy.currency || "",
+      paymentFrequency: policy.paymentFrequency || "",
     });
     setDialogOpen(true);
   };
@@ -143,36 +158,111 @@ const ManagePolicies = () => {
                 duration: "",
                 baseRate: "",
                 image: "",
+                currency: "",
+                paymentFrequency: "",
               });
               setDialogOpen(true);
             }}>
               Add New Policy
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-xl">
-            <DialogHeader>
-              <DialogTitle>{editingPolicy ? "Edit Policy" : "Add Policy"}</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-3 py-2">
-              <Input name="title" value={formData.title} onChange={handleChange} placeholder="Policy Title" />
-              <Input name="category" value={formData.category} onChange={handleChange} placeholder="Category" />
-              <Textarea name="description" value={formData.description} onChange={handleChange} placeholder="Description" />
-              <div className="grid grid-cols-2 gap-2">
-                <Input name="minAge" value={formData.minAge} onChange={handleChange} placeholder="Min Age" type="number" />
-                <Input name="maxAge" value={formData.maxAge} onChange={handleChange} placeholder="Max Age" type="number" />
-              </div>
-              <Input name="coverage" value={formData.coverage} onChange={handleChange} placeholder="Coverage Range" />
-              <Input name="duration" value={formData.duration} onChange={handleChange} placeholder="Duration Options" />
-              <Input name="baseRate" value={formData.baseRate} onChange={handleChange} placeholder="Base Premium Rate" />
-              <Input name="image" value={formData.image} onChange={handleChange} placeholder="Image URL" />
-            </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button onClick={handleSubmit}>{editingPolicy ? "Update" : "Create"}</Button>
-            </DialogFooter>
-          </DialogContent>
+          <DialogContent className="max-w-xl max-h-[80vh] overflow-hidden flex flex-col">
+  <DialogHeader>
+    <DialogTitle>{editingPolicy ? "Edit Policy" : "Add Policy"}</DialogTitle>
+  </DialogHeader>
+
+  {/* Scrollable form container */}
+  <div className="flex-1 overflow-y-auto grid gap-3 py-2">
+    <Input
+      name="title"
+      value={formData.title}
+      onChange={handleChange}
+      placeholder="Policy Title"
+    />
+    <Input
+      name="category"
+      value={formData.category}
+      onChange={handleChange}
+      placeholder="Category"
+    />
+    <Textarea
+      name="description"
+      value={formData.description}
+      onChange={handleChange}
+      placeholder="Description"
+    />
+    <div className="grid grid-cols-2 gap-2">
+      <Input
+        name="minAge"
+        value={formData.minAge}
+        onChange={handleChange}
+        placeholder="Min Age"
+        type="number"
+      />
+      <Input
+        name="maxAge"
+        value={formData.maxAge}
+        onChange={handleChange}
+        placeholder="Max Age"
+        type="number"
+      />
+    </div>
+    <Input
+      name="coverage"
+      value={formData.coverage}
+      onChange={handleChange}
+      placeholder="Coverage Range"
+    />
+    <Input
+      name="duration"
+      value={formData.duration}
+      onChange={handleChange}
+      placeholder="Duration Options"
+    />
+    <Input
+      name="baseRate"
+      value={formData.baseRate}
+      onChange={handleChange}
+      placeholder="Base Premium Rate"
+    />
+    <Input
+      name="currency"
+      value={formData.currency}
+      onChange={handleChange}
+      placeholder="Currency (e.g., USD)"
+    />
+
+    {/* Controlled Select component */}
+    <Select
+      value={formData.paymentFrequency || ""}
+      onValueChange={(val) => setFormData({ ...formData, paymentFrequency: val })}
+    >
+      <SelectTrigger>
+        <SelectValue placeholder="Select Payment Frequency" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="monthly">Monthly</SelectItem>
+        <SelectItem value="yearly">Yearly</SelectItem>
+      </SelectContent>
+    </Select>
+
+    <Input
+      name="image"
+      value={formData.image}
+      onChange={handleChange}
+      placeholder="Image URL"
+    />
+  </div>
+
+  <DialogFooter>
+    <DialogClose asChild>
+      <Button variant="outline">Cancel</Button>
+    </DialogClose>
+    <Button onClick={handleSubmit}>
+      {editingPolicy ? "Update" : "Create"}
+    </Button>
+  </DialogFooter>
+</DialogContent>
         </Dialog>
       </div>
 
@@ -182,7 +272,6 @@ const ManagePolicies = () => {
             <TableHead>Title</TableHead>
             <TableHead>Category</TableHead>
             <TableHead>Age</TableHead>
-         
             <TableHead>Duration</TableHead>
             <TableHead>Rate</TableHead>
             <TableHead>Actions</TableHead>
@@ -194,18 +283,13 @@ const ManagePolicies = () => {
               <TableCell>{policy.title}</TableCell>
               <TableCell>{policy.category}</TableCell>
               <TableCell>{policy.minAge} - {policy.maxAge}</TableCell>
-              
               <TableCell>{policy.duration}</TableCell>
-              <TableCell>{policy.baseRate}</TableCell>
+              <TableCell>{policy.baseRate} {policy.currency || ""}</TableCell>
               <TableCell className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => handleEdit(policy)}>
-                  Edit
-                </Button>
+                <Button variant="outline" size="sm" onClick={() => handleEdit(policy)}>Edit</Button>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm">
-                      Delete
-                    </Button>
+                    <Button variant="destructive" size="sm">Delete</Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
@@ -213,9 +297,7 @@ const ManagePolicies = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction onClick={() => handleDelete(policy._id)}>
-                        Confirm
-                      </AlertDialogAction>
+                      <AlertDialogAction onClick={() => handleDelete(policy._id)}>Confirm</AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>

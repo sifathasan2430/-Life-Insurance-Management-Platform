@@ -1,15 +1,16 @@
 import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import UserAuthContext from "@/Context/UserAuthContext";
+import { useNavigate } from "react-router-dom";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-hot-toast";
-import axios from "axios";
-import secureAxios from "../../../../Persel/persel-client-app/src/utils/firebaseAxios";
+import secureAxios from "../utils/firebaseAxios";
+import UserAuthContext from "../Context/UserAuthContext";
+// ✅ Use secureAxios for authenticated calls
 
 const Register = () => {
   const { registerUser, loginWithGoogle } = useContext(UserAuthContext);
@@ -17,13 +18,20 @@ const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  const redirectByRole = (role) => {
+    if (role === "admin") navigate("/admin/dashboard");
+    else if (role === "agent") navigate("/agent/dashboard");
+    else navigate("/");
+  };
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
       const userCredential = await registerUser(data.email, data.password);
       const user = userCredential.user;
 
-      await secureAxios.post('/users', {
+      // Save user
+      await secureAxios.post("/users", {
         name: data.name,
         email: data.email,
         photo: data.photo || "",
@@ -32,8 +40,9 @@ const Register = () => {
       });
 
       toast.success("Registration successful!");
+
+      redirectByRole("customer"); // default role for email/password signup
       reset();
-      navigate("/");
     } catch (err) {
       toast.error("Registration failed!");
       console.error(err);
@@ -43,34 +52,36 @@ const Register = () => {
   };
 
   const handleGoogleSignup = async () => {
-  try {
-    const result = await loginWithGoogle();
-    const user = result.user;
+    try {
+      const result = await loginWithGoogle();
+      const user = result.user;
 
-    // ✅ Step 1: Check if user exists
-    const res = await secureAxios.get(
-      `/users`,
-      {
-        params: { email: user.email },
-      }
-    );
-
-    //  Step 2: Save user if not exist
-    if (!res.data.exists) {
-      await secureAxios.post( '/users', {
-        name: user.displayName,
-        email: user.email,
-        photo: user.photoURL || "",
-        role: "customer",
+      // ✅ Check if user exists
+      const res = await secureAxios.get(`/users`, {
+        params: { email: user?.email, checkExists: true },
       });
-    }
 
-    toast.success("Google login successful!");
-    navigate("/dashboard");
-  } catch (err) {
-    toast.error("Google login failed!");
-    console.error(err);
-  }
+      if (!res.data.exists) {
+        // If user doesn't exist, create
+        await secureAxios.post("/users", {
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL || "",
+          role: "customer",
+        });
+      }
+
+      // ✅ Get role
+      const userInfo = await secureAxios.get("/users", {
+        params: { email: user?.email },
+      });
+
+      redirectByRole(userInfo.data.role);
+      toast.success("Google login successful!");
+    } catch (err) {
+      toast.error("Google login failed!");
+      console.error(err);
+    }
   };
 
   return (
@@ -83,56 +94,35 @@ const Register = () => {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-             <div  className="space-y-2">
-              <Label htmlFor="email">Name</Label>
-              <Input
-                id="name"
-                type="name"
-                placeholder="Jhon Doe"
-                {...register("name", { required: "Name is required" })}
-              />
-              {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
-            </div>
-            <div  className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="you@example.com"
-              {...register("email", { required: "Email is required" })}
-              />
-              {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input id="name" {...register("name", { required: "Name is required" })} />
             </div>
 
-            <div  className="space-y-2">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" {...register("email", { required: "Email is required" })} />
+            </div>
+
+            <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Your password"
-                 {...register("password", {
-  required: "Password is required",
-  minLength: {
-    value: 6,
-    message: "Password must be at least 6 characters"
-  },
-  pattern: {
-    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
-    message: "Must contain uppercase, lowercase, and a number"
-  }
-})}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: { value: 6, message: "At least 6 characters" },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/,
+                    message: "Include uppercase, lowercase, and number",
+                  },
+                })}
               />
-              {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
             </div>
 
-            <div>
+            <div className="space-y-2">
               <Label htmlFor="photo">Photo URL</Label>
-              <Input
-                id="photo"
-                type="text"
-                placeholder="https://example.com/photo.jpg"
-                {...register("photo")}
-              />
+              <Input id="photo" type="text" {...register("photo")} />
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
@@ -142,7 +132,6 @@ const Register = () => {
 
           <div className="mt-4">
             <Button
-              type="button"
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
               onClick={handleGoogleSignup}
@@ -151,13 +140,6 @@ const Register = () => {
               Register with Google
             </Button>
           </div>
-
-          <p className="text-center text-sm text-gray-600 mt-4">
-            Already have an account?
-            <Link to="/login" className="text-orange-600 font-medium ml-1 hover:underline">
-              Login
-            </Link>
-          </p>
         </CardContent>
       </Card>
     </div>

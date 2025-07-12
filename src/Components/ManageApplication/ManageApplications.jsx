@@ -17,7 +17,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
@@ -28,10 +27,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const ManageApplications = () => {
   const queryClient = useQueryClient();
-
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -70,18 +73,13 @@ const ManageApplications = () => {
     updateApplication(id, { assignedAgent: agentEmail });
   };
 
-  const handleReject = (id, value) => {
-    updateApplication(id, { status: value });
+  const handleReject = (id) => {
+    updateApplication(id, { status: "Rejected" });
   };
 
   const openDetailsModal = (application) => {
     setSelectedApplication(application);
     setIsDetailsOpen(true);
-  };
-
-  const closeDetailsModal = () => {
-    setSelectedApplication(null);
-    setIsDetailsOpen(false);
   };
 
   if (isLoading) return <div>Loading applications...</div>;
@@ -90,8 +88,12 @@ const ManageApplications = () => {
     <div>
       <h2 className="text-xl font-semibold mb-4">Manage Applications</h2>
 
+      {applications.length === 0 && (
+        <p className="text-center py-4 text-gray-500">No applications found.</p>
+      )}
+
       <Table>
-        <TableHeader className="text-center">
+        <TableHeader>
           <TableRow>
             <TableHead className="text-center">Applicant Name</TableHead>
             <TableHead className="text-center">Email</TableHead>
@@ -100,37 +102,65 @@ const ManageApplications = () => {
             <TableHead className="text-center">Status</TableHead>
             <TableHead className="text-center">Assign Agent</TableHead>
             <TableHead className="text-center">Actions</TableHead>
-            <TableHead className="text-center">Change Status</TableHead>
           </TableRow>
         </TableHeader>
-
         <TableBody>
           {applications.map((app) => (
             <TableRow key={app._id}>
               <TableCell className="text-center">{app.name}</TableCell>
               <TableCell className="text-center">{app.email}</TableCell>
-              <TableCell className="text-center">{app.policyTitle}</TableCell>
-              <TableCell className="text-center">{new Date(app.createdAt).toLocaleDateString()}</TableCell>
-              <TableCell className="text-center">{app.status}</TableCell>
-
-              <TableCell className="text-center">
-                <Select
-                  onValueChange={(val) => handleAssignAgent(app._id, val)}
-                  defaultValue={app.assignedAgent || ""}
-                >
-                  <SelectTrigger className="w-40 border-[#ff8c00] text-[#ff8c00] focus:ring-[#ff8c00]">
-                    <SelectValue placeholder="Assign Agent" />
-                  </SelectTrigger>
-                  {/* <SelectContent>
-                    {agents.map((agent) => (
-                      <SelectItem key={agent._id} value={agent.email}>
-                        {agent.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent> */}
-                </Select>
+              <TableCell className="text-center max-w-[160px] truncate">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="truncate block cursor-default">
+                      {app.policyTitle}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>{app.policyTitle}</TooltipContent>
+                </Tooltip>
               </TableCell>
-
+              <TableCell className="text-center">
+                {new Date(app.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                })}
+              </TableCell>
+              <TableCell className="text-center">
+                <span
+                  className={`px-2 py-1 rounded text-xs font-medium ${
+                    app.status === "Approved"
+                      ? "bg-green-100 text-green-700"
+                      : app.status === "Rejected"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-yellow-100 text-yellow-700"
+                  }`}
+                >
+                  {app.status}
+                </span>
+              </TableCell>
+              <TableCell className="text-center">
+                {agents.length > 0 ? (
+                  <Select
+                    onValueChange={(val) => handleAssignAgent(app._id, val)}
+                    defaultValue={app.assignedAgent || ""}
+                    disabled={!!app.assignedAgent}
+                  >
+                    <SelectTrigger className="w-40 border-[#ff8c00] text-[#ff8c00] focus:ring-[#ff8c00]">
+                      <SelectValue placeholder="Assign Agent" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {agents.map((agent) => (
+                        <SelectItem key={agent._id} value={agent.email}>
+                          {agent.name} ({agent.email})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <span className="text-red-500">No agents</span>
+                )}
+              </TableCell>
               <TableCell className="flex gap-2 justify-center">
                 <Button
                   size="sm"
@@ -139,10 +169,13 @@ const ManageApplications = () => {
                 >
                   View Details
                 </Button>
-              </TableCell>
-
-              <TableCell className="text-center">
-                <Button onClick={() => handleReject(app._id, "Rejected")} variant="destructive">Reject</Button>
+                <Button
+                  size="sm"
+                  onClick={() => handleReject(app._id)}
+                  variant="destructive"
+                >
+                  Reject
+                </Button>
               </TableCell>
             </TableRow>
           ))}
@@ -151,7 +184,7 @@ const ManageApplications = () => {
 
       {/* Details Modal */}
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Application Details</DialogTitle>
           </DialogHeader>
@@ -176,7 +209,9 @@ const ManageApplications = () => {
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button className="bg-[#ff8c00] text-white hover:bg-[#e67c00]">Close</Button>
+              <Button className="bg-[#ff8c00] text-white hover:bg-[#e67c00]">
+                Close
+              </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
