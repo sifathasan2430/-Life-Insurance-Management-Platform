@@ -10,7 +10,7 @@ import {
   updateProfile,
 } from 'firebase/auth';
 
-import axios from 'axios';
+
 
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);

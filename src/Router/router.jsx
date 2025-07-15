@@ -29,6 +29,10 @@ import PoliciesPage from "../Pages/AllPolicy/PoliciesPage";
 import BlogDetailsPage from "../Pages/BlogDetailsPage/BlogDetailsPage";
 import BlogPage from "../Pages/BlogPage/BlogPage";
 import ProfilePage from "../Pages/ProfilePage/ProfilePage";
+import AgentStatusSection from "../Components/AgentStatusDashboard/AgentStatusSection";
+import UserPolicyStatus from "../UserPolicyStatus/UserPolicyStatus";
+import MultiStepForm from "../Components/MultiStepForm/MultiStepForm";
+import AgentClaimsManagement from "../Layout/AgentLayout/AgentDashboard/AgentClaimsManagement/AgentClaimsManagement";
 
 
 
@@ -48,6 +52,11 @@ const router=createBrowserRouter([
         {
             path: "/policy/:id",
             Component:PolicyDetailsPage
+        },
+        {
+            path:"/multipageform",
+            Component:MultiStepForm
+
         },
         {
             path:"/quote/:id",
@@ -101,6 +110,7 @@ const router=createBrowserRouter([
    path: "/admin/dashboard",
    Component:AdminDashboardLayout,
    children:[
+    
     {
     path: "/admin/dashboard/applications",
     element: <ManageApplications />
@@ -142,9 +152,46 @@ const router=createBrowserRouter([
     {
         path:"/agent/dashboard/assigned-customers",
         Component:AgentAssignedCustomers
+    },
+    {
+        path:"/agent/dashboard/agent-claims-management",
+        Component:AgentClaimsManagement
+    },
+    {
+        path:"/agent/dashboard",
+        Component:AgentStatusSection
     }
-]
+    ]
 },
+{
+    path:"/customer/dashboard",
+    Component:CustomerDashboardLayout,
+    children:[
+    {
+        path:"/customer/dashboard/my-policies",
+        Component:MyPoliciesPage
+    },
+    {
+        path:"/customer/dashboard/payment-status",
+        Component:PaymentStatus
+    },
+    {
+        path:"/customer/dashboard/make-payment/:id",
+        Component:MakePaymentPage
+    },
+    {
+        path:"/customer/dashboard/claim-request",
+        Component:ClaimRequestForm
+    },
+    {
+        path:"/customer/dashboard/reject-policies",
+        Component:UserPolicyStatus
+    }
+   
+    ]
+},
+
+
  {
        path:'/customer/dashboard',
        Component:CustomerDashboardLayout,

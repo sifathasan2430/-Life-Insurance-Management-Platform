@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const QuotePage = () => {
+const QuotePage = ({nextStep}) => {
   const [formData, setFormData] = useState({
     age: "",
     gender: "male",
@@ -153,7 +153,7 @@ const QuotePage = () => {
             Calculate Premium
           </Button>
 
-          <Button
+          {/* <Button
             type="button"
             variant="outline"
             className="w-full sm:w-1/2 border-[#ff8c00] text-[#ff8c00] hover:bg-[#ff8c00]/10"
@@ -168,7 +168,10 @@ const QuotePage = () => {
             }
           >
             Apply for Policy
-          </Button>
+          </Button> */}
+{/* -------------------------------------ProgerssBar ------------*/}
+    <Button onClick={nextStep} >ApplyApplication</Button>
+   {/* -------------------------------------ProgerssBar ------------*/}       
         </div>
       </form>
 

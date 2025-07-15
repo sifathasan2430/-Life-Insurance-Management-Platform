@@ -59,7 +59,7 @@ const ManagePolicies = () => {
     queryKey: ["policies"],
     queryFn: async () => {
       const res = await secureAxios.get("/policies");
-      return res.data;
+      return res.data.result;
     },
   });
 

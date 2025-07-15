@@ -2,17 +2,18 @@ import React, { useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
-import axios from "axios";
+
 import Swal from "sweetalert2";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import UserAuthContext from "../../../Context/UserAuthContext";
 import secureAxios from "../../../utils/firebaseAxios";
 
+
 const CheckoutForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const stripe = useStripe();
+  const stripe = useStripe()
   const elements = useElements();
   const { user } = useContext(UserAuthContext);
 
@@ -38,7 +39,7 @@ const CheckoutForm = () => {
   } = useQuery({
     queryKey: ["paymentIntent", payment?._id],
     queryFn: async () => {
-      const res = await axios.post("http://localhost:3000/api/create-payment-intent", {
+      const res = await secureAxios.post("/create-payment-intent", {
         amount: payment?.amount * 100,
         currency: payment?.currency?.toLowerCase(),
         applicationId: payment?.applicationId,
@@ -75,13 +76,13 @@ const CheckoutForm = () => {
     if (paymentIntent.status === "succeeded") {
       try {
         // ✅ 1. Save payment as "Paid"
-        await axios.post(`http://localhost:3000/api/payments/${id}/confirm`, {
+        await secureAxios.post(`/payments/${id}/confirm`, {
           paymentIntentId: paymentIntent.id,
           status: "Paid",
         });
 
         // ✅ 2. Update Policy to Active
-        await axios.patch(`http://localhost:3000/api/policies/${payment.policyId}`, {
+        await secureAxios.patch(`policies/${payment.policyId}`, {
           isActive: true,
         });
 
@@ -175,6 +176,7 @@ const CheckoutForm = () => {
           {isIntentLoading ? "Processing..." : `Pay ${payment.amount} ${payment.currency.toUpperCase()}`}
         </Button>
       </form>
+      
     </div>
   );
 };

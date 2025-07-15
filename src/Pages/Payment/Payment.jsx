@@ -10,11 +10,10 @@ import CheckoutForm from "./CheckoutForm/CheckoutForm";
 // Replace with your real Stripe public key
 const stripePromise = loadStripe("pk_test_51RhlJiIvwpUD3bp1kIxuw2aTvTrD7HHq3TzRDE79ykPqoju9icSGqEAsJDubjLr1bK1ErKUUoN7TUJCLvAwWA65j00WITJHTZ9");
 
-const PaymentPage = () => {
+const PaymentPage = ({prevStep}) => {
   return (
- 
     <Elements stripe={stripePromise}>
-      <CheckoutForm />
+      <CheckoutForm prevStep={prevStep} />
     </Elements>
   );
 };

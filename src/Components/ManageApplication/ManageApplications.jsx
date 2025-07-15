@@ -37,6 +37,9 @@ const ManageApplications = () => {
   const queryClient = useQueryClient();
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+  const [rejectingApplication, setRejectingApplication] = useState(null);
+  const [adminFeedback, setAdminFeedback] = useState("");
 
   const { data: applications = [], isLoading } = useQuery({
     queryKey: ["applications"],
@@ -73,13 +76,30 @@ const ManageApplications = () => {
     updateApplication(id, { assignedAgent: agentEmail });
   };
 
-  const handleReject = (id) => {
-    updateApplication(id, { status: "Rejected" });
+  const handleReject = (application) => {
+    setRejectingApplication(application);
+    setIsRejectModalOpen(true);
   };
 
   const openDetailsModal = (application) => {
     setSelectedApplication(application);
     setIsDetailsOpen(true);
+  };
+
+  const submitRejectionFeedback = async () => {
+    if (!adminFeedback.trim()) {
+      toast.error("Please enter feedback before submitting.");
+      return;
+    }
+
+    await updateApplication(rejectingApplication._id, {
+      status: "Rejected",
+      feedback: adminFeedback,
+    });
+
+    setIsRejectModalOpen(false);
+    setAdminFeedback("");
+    setRejectingApplication(null);
   };
 
   if (isLoading) return <div>Loading applications...</div>;
@@ -171,7 +191,7 @@ const ManageApplications = () => {
                 </Button>
                 <Button
                   size="sm"
-                  onClick={() => handleReject(app._id)}
+                  onClick={() => handleReject(app)}
                   variant="destructive"
                 >
                   Reject
@@ -202,6 +222,9 @@ const ManageApplications = () => {
                 <p><strong>Nominee Name:</strong> {selectedApplication.nomineeName}</p>
                 <p><strong>Nominee Relationship:</strong> {selectedApplication.nomineeRelation}</p>
                 <p><strong>Health Conditions:</strong> {selectedApplication.healthConditions?.join(", ") || "None"}</p>
+                {selectedApplication.status === "Rejected" && selectedApplication.feedback && (
+                  <p><strong>Admin Feedback:</strong> {selectedApplication.feedback}</p>
+                )}
               </>
             ) : (
               <p>No application selected</p>
@@ -213,6 +236,39 @@ const ManageApplications = () => {
                 Close
               </Button>
             </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Reject Feedback Modal */}
+      <Dialog open={isRejectModalOpen} onOpenChange={setIsRejectModalOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reject Application</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p>
+              Please provide a reason for rejecting the application of{" "}
+              <strong>{rejectingApplication?.name}</strong>.
+            </p>
+            <textarea
+              className="w-full border rounded p-2"
+              rows="4"
+              placeholder="Enter feedback..."
+              value={adminFeedback}
+              onChange={(e) => setAdminFeedback(e.target.value)}
+            />
+          </div>
+          <DialogFooter className="mt-4">
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button
+              className="bg-red-600 text-white hover:bg-red-700"
+              onClick={submitRejectionFeedback}
+            >
+              Submit Rejection
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

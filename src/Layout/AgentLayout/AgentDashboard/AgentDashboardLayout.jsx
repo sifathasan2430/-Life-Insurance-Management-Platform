@@ -17,9 +17,9 @@ import {
 const AgentDashboardLayout = () => {
   const navLinks = [
     {
-      to: "/agent/dashboard",
+      to: "/agent/dashboard/agent-claims-management",
       icon: <LayoutDashboard className="w-5 h-5" />,
-      label: "Dashboard Overview",
+      label: "Claims Management  ",
     },
     {
       to: "/agent/dashboard/assigned-customers",
@@ -36,6 +36,11 @@ const AgentDashboardLayout = () => {
       icon: <Pencil className="w-5 h-5" />,
       label: "My Blog Posts",
     },
+    {
+      to: "/agent/dashboard",
+      icon: <LayoutDashboard className="w-5 h-5" />,
+      label: "Feedback Overview",
+    }
   ];
 
   const baseClass =
@@ -48,6 +53,7 @@ const AgentDashboardLayout = () => {
         <NavLink
           key={to}
           to={to}
+          end={to === "/agent/dashboard"}
           className={({ isActive }) =>
             `${baseClass} ${isActive ? activeClass : "text-gray-700"}`
           }
@@ -97,4 +103,4 @@ const AgentDashboardLayout = () => {
   );
 };
 
-export default AgentDashboardLayout;
+export default AgentDashboardLayout

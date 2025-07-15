@@ -1,13 +1,24 @@
+import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import secureAxios from "../../utils/firebaseAxios";
 import { toast } from "sonner";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 const PendingAgentApplications = () => {
   const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [selectedApp, setSelectedApp] = useState(null);
 
-  // Fetch only pending applications
   const { data: applications = [], isLoading } = useQuery({
     queryKey: ["pendingAgentApplications"],
     queryFn: async () => {
@@ -16,18 +27,41 @@ const PendingAgentApplications = () => {
     },
   });
 
-  const handleStatusUpdate = async (id, status) => {
+  const handleRejectSubmit = async () => {
     try {
-      const res = await secureAxios.patch(`/agent-applications/${id}`, { status });
+      const res = await secureAxios.patch(`/agent-applications/${selectedApp._id}`, {
+        status: "rejected",
+        rejectionMessage: feedback,
+      });
+
       if (res.data.modifiedCount > 0) {
-        toast.success(`Status updated to ${status}`);
+        toast.success("Application rejected with feedback");
+        setFeedback("");
+        setSelectedApp(null);
+        setOpen(false);
         queryClient.invalidateQueries(["pendingAgentApplications"]);
       } else {
-        toast.error("Update failed or no changes");
+        toast.error("Failed to reject or no changes made");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong");
+      toast.error("Error rejecting application");
+    }
+  };
+
+  const handleApprove = async (id) => {
+    try {
+      const res = await secureAxios.patch(`/agent-applications/${id}`, {
+        status: "approved",
+      });
+      if (res.data.modifiedCount > 0) {
+        toast.success("Application approved");
+        queryClient.invalidateQueries(["pendingAgentApplications"]);
+      } else {
+        toast.error("Approval failed");
+      }
+    } catch (err) {
+      toast.error("Error approving application");
     }
   };
 
@@ -39,7 +73,7 @@ const PendingAgentApplications = () => {
 
       <Table>
         <TableHeader>
-          <TableRow className="bg-gray-100 ">
+          <TableRow className="bg-gray-100">
             <TableHead className="text-center">Name</TableHead>
             <TableHead className="text-center">Email</TableHead>
             <TableHead className="text-center">Status</TableHead>
@@ -58,14 +92,18 @@ const PendingAgentApplications = () => {
                 <Button
                   size="sm"
                   className="bg-green-600 text-white hover:bg-green-700"
-                  onClick={() => handleStatusUpdate(app._id, "approved")}
+                  onClick={() => handleApprove(app._id)}
                 >
                   Approve
                 </Button>
+
                 <Button
                   size="sm"
                   variant="destructive"
-                  onClick={() => handleStatusUpdate(app._id, "rejected")}
+                  onClick={() => {
+                    setSelectedApp(app);
+                    setOpen(true);
+                  }}
                 >
                   Reject
                 </Button>
@@ -74,6 +112,35 @@ const PendingAgentApplications = () => {
           ))}
         </TableBody>
       </Table>
+
+      {/* Single Dialog controlled by state */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reject Agent Application</DialogTitle>
+          </DialogHeader>
+
+          <Textarea
+            placeholder="Write rejection reason"
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            className="min-h-[100px]"
+          />
+
+          <div className="flex justify-end gap-2 pt-4">
+            <Button variant="ghost" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              disabled={!feedback.trim()}
+              onClick={handleRejectSubmit}
+              className="bg-red-600 text-white hover:bg-red-700"
+            >
+              Submit Rejection
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -68,6 +68,7 @@ const Register = () => {
           email: user.email,
           photo: user.photoURL || "",
           role: "customer",
+          created_at: new Date().toISOString()
         });
       }
 

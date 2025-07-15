@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 import secureAxios from '../../utils/firebaseAxios';
 import Swal from 'sweetalert2';
 
-const ApplicationForm = () => {
+const ApplicationForm = ({nextStep,prevStep}) => {
   const { state } = useLocation();
 console.log(state)
   const policy = state?.policyTitle;
@@ -60,6 +60,7 @@ console.log(state)
       currency: policyData.currency,
       status: 'Pending',
       assignedAgent: null,
+      hasClaimed:false,
       createdAt: new Date().toISOString(),
     };
 
@@ -144,9 +145,12 @@ console.log(state)
           </div>
         </div>
 
-        <Button type="submit" className="mt-4 bg-orange-600 text-white hover:bg-orange-700">
+        <Button  type="submit" className="mt-4 bg-orange-600 text-white hover:bg-orange-700">
           Submit Application
         </Button>
+
+          <Button onClick={prevStep}>Prev</Button>
+          <Button onClick={nextStep}>Next</Button>
       </form>
     </div>
   );

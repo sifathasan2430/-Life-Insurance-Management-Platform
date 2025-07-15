@@ -108,6 +108,18 @@ const PolicyDetailsPage = () => {
             >
               Apply for Policy
             </Button>
+           <Button
+  onClick={() =>
+    navigate("/multipageform", {
+      state: {
+        policyTitle: policy.title,
+        policyId: policy._id,
+      },
+    })
+  }
+>
+  MultiPage
+</Button>
           </div>
         </div>
       </div>

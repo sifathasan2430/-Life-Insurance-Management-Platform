@@ -12,6 +12,7 @@ const AgentApplicationForm = () => {
     phone: "",
     address: "",
     experience: "",
+    specialties: "", // <-- new field, comma separated string
     resumeLink: "",
   });
 
@@ -25,8 +26,15 @@ const AgentApplicationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Convert specialties string to array (trimmed, no empty)
+    const specialtiesArray = formData.specialties
+      .split(",")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+
     const payload = {
       ...formData,
+      specialties: specialtiesArray,
       status: "pending",
       appliedAt: new Date().toISOString(),
     };
@@ -42,6 +50,7 @@ const AgentApplicationForm = () => {
           phone: "",
           address: "",
           experience: "",
+          specialties: "",
           resumeLink: "",
         });
       } else {
@@ -94,6 +103,13 @@ const AgentApplicationForm = () => {
           onChange={handleChange}
           placeholder="Describe your insurance or sales experience"
           rows={4}
+          required
+        />
+        <Input
+          name="specialties"
+          value={formData.specialties}
+          onChange={handleChange}
+          placeholder="Specialties (comma separated)"
           required
         />
         <Input
