@@ -8,17 +8,17 @@ import { useNavigate } from 'react-router';
 
 const slides = [
   {
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1470&q=80',
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85',
     title: 'Comprehensive Health Coverage',
     subtitle: 'Affordable plans that protect you and your family.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1583&q=80',
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85',
     title: 'Drive With Confidence',
     subtitle: 'Reliable auto insurance that has you covered.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1473&q=80',
+    image: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85',
     title: 'Protect Your Home',
     subtitle: 'Get covered for fire, theft, and natural disasters.',
   },

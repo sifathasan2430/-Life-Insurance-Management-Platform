@@ -18,32 +18,42 @@ const Navbar = () => {
   const {user,  logout,userRole } = useContext(UserAuthContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 const navigate=useNavigate()
-  const navLinks = (
-    <>
-      <NavLink to="/" className="hover:text-orange-500 transition">Home</NavLink>
-      <NavLink to="/all-policies" className="hover:text-orange-500 transition">All Policies</NavLink>
-      <NavLink to="/agent-form" className="hover:text-orange-500 transition">Be A Agent</NavLink>
-      <NavLink to="/faqs" className="hover:text-orange-500 transition">FAQs</NavLink>
-      <NavLink to="/blog" className="hover:text-orange-500 transition">Blogs</NavLink>
-      
-      {user && userRole === "customer" && (
-        <>
-          <NavLink
-            to="/customer/dashboard"
-            className="hover:text-orange-500 transition"
-          >
+ const navLinks = (
+  <>
+    <NavLink to="/" className="hover:text-orange-500 transition">Home</NavLink>
+    <NavLink to="/all-policies" className="hover:text-orange-500 transition">All Policies</NavLink>
+    <NavLink to="/agent-form" className="hover:text-orange-500 transition">Be A Agent</NavLink>
+    <NavLink to="/faqs" className="hover:text-orange-500 transition">FAQs</NavLink>
+    <NavLink to="/blog" className="hover:text-orange-500 transition">Blogs</NavLink>
+
+    {user && (
+      <>
+        {userRole === "admin" && (
+          <NavLink to="/admin/dashboard" className="hover:text-orange-500 transition">
+            Admin Dashboard
+          </NavLink>
+        )}
+        {userRole === "agent" && (
+          <NavLink to="/agent/dashboard" className="hover:text-orange-500 transition">
+            Agent Dashboard
+          </NavLink>
+        )}
+        {userRole === "customer" && (
+          <NavLink to="/customer/dashboard" className="hover:text-orange-500 transition">
             User Dashboard
           </NavLink>
-          <NavLink
-            to="/claimRequest"
-            className="hover:text-orange-500 transition"
-          >
+        )}
+       
+        {userRole === "customer" && (
+          <NavLink to="/claimRequest" className="hover:text-orange-500 transition">
             Claim Request
           </NavLink>
-        </>
-      )}
-    </>
-  );
+        )}
+      </>
+    )}
+  </>
+);
+
 
   const handleLogout = async () => {
   await secureAxios.post("/logout");
