@@ -4,6 +4,7 @@ import { Autoplay, Pagination, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-fade';
+import { useNavigate } from 'react-router';
 
 const slides = [
   {
@@ -24,6 +25,7 @@ const slides = [
 ];
 
 const HeroSlider = () => {
+  const navigate=useNavigate()
   return (
     <div className="w-full h-[75vh] relative">
       <Swiper
@@ -51,7 +53,7 @@ const HeroSlider = () => {
                 <div className="text-center text-white max-w-7xl mx-auto px-4">
                   <h2 className="text-3xl md:text-5xl font-bold mb-4">{slide.title}</h2>
                   <p className="text-lg md:text-xl mb-6">{slide.subtitle}</p>
-                  <button className="bg-[#ff9a68] hover:bg-[#ff8a50] transition px-6 py-3 rounded-full font-semibold shadow-lg">
+                  <button onClick={()=>navigate('/quote/686f8b41f40617de400e1da0')} className="bg-[#ff9a68] hover:bg-[#ff8a50] transition px-6 py-3 rounded-full font-semibold shadow-lg">
                     Get a Quote
                   </button>
                 </div>

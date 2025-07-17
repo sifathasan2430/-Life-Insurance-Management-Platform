@@ -33,183 +33,201 @@ import AgentStatusSection from "../Components/AgentStatusDashboard/AgentStatusSe
 import UserPolicyStatus from "../UserPolicyStatus/UserPolicyStatus";
 import MultiStepForm from "../Components/MultiStepForm/MultiStepForm";
 import AgentClaimsManagement from "../Layout/AgentLayout/AgentDashboard/AgentClaimsManagement/AgentClaimsManagement";
+import PrivateRouter from "./PrivateRoute/PrivateRouter";
+import RoleRoute from "./RoleRouter/RoleRoute";
 
 
 
-const router=createBrowserRouter([
-    {
-        path: "/",
-        Component:Root,
-        children: [{
-            index: true,
-            Component:Home
-        },
-        {
-            path:"/all-policies",
-            Component:PoliciesPage
 
-        },
-        {
-            path: "/policy/:id",
-            Component:PolicyDetailsPage
-        },
-        {
-            path:"/multipageform",
-            Component:MultiStepForm
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: Root,
+    children: [
+      {
+        index: true,
+        Component: Home,
+      },
+      {
+        path: "/all-policies",
+        Component: PoliciesPage,
+      },
+      {
+        path: "/policy/:id",
+        Component: PolicyDetailsPage,
+      },
+      {
+        path: "/multipageform",
+        Component: MultiStepForm,
+      },
+      {
+        path: "/quote/:id",
+      element: (
+      <PrivateRouter>
+        <QuotePage />
+      </PrivateRouter>
+    ),
+      },
+      {
+        path: "/application",
+        element: (
+          <PrivateRouter>
+            <ApplicationForm />
+          </PrivateRouter>
+        ),
+      },
+      {
+        path: "/agent-form",
+      element: (
+      <PrivateRouter>
+        <AgentApplicationForm />
+      </PrivateRouter>
+    ),
 
-        },
-        {
-            path:"/quote/:id",
-            Component:QuotePage
-        },   
-        {
-            path:"/application",
-            Component:ApplicationForm
+      },
+      {
+        path: "/faqs",
+        Component: LifeInsuranceFAQ,
+      },
+      {
+        path: "/blog",
+        Component: BlogPage,
+      },
+      {
+        path: "/profile",
+        Component: ProfilePage,
+      },
+      {
+        path: "/blog/:id",
+        Component: BlogDetailsPage,
+      },
+      {
+        path: "/claimRequest",
+        element: (
+          <PrivateRouter>
+            <RoleRoute allowedRole="customer">
+              <ClaimRequestForm />
+            </RoleRoute>
+          </PrivateRouter>
+        ),
 
-        },
-        {
-            path:"/agent-form",
-            Component:AgentApplicationForm
-        },
-    {
-        path:'/faqs',
-        Component:LifeInsuranceFAQ
-    },
-    {
-        path: '/blog',
-        Component: BlogPage
-    },
-    {
-        path:"/profile",
-        Component:ProfilePage
-    },
-    {
-        path: '/blog/:id',
-        Component:BlogDetailsPage
-
-    },
-    {
-        path:"/claimRequest",
-        Component:ClaimRequestForm
-    },
-   
        
-       
-            {
-            
-                path: "/login",
-                Component:Login
- },
- {
-    path: "/register",
-    Component:Register
- }
-]
-},
-{
-   path: "/admin/dashboard",
-   Component:AdminDashboardLayout,
-   children:[
-    
-    {
-    path: "/admin/dashboard/applications",
-    element: <ManageApplications />
-   },
+      },
 
-   {
-    path:"/admin/dashboard/manage-users",
-    Component:ManageUsers
-   },
-   {
-    path: "/admin/dashboard/policies",
-    Component:ManagePolicies
-   },
-   {
-    path: "/admin/dashboard/active-agents",
-    Component:ActiveAgents
-   },
-   {
-    path:"/admin/dashboard/agents/pending",
-    Component:PendingAgentApplications
-   },
-   {
-    path: "/admin/dashboard/transactions",
-    Component:AdminTransactions
-   }
-   ] 
-},
-{
-    path:"/agent/dashboard",
-    Component:AgentDashboardLayout,
-    children:[{
-        path:"/agent/dashboard/blog-posts",
-        Component:BlogPosts,
-    },
-    {
-        path:"/agent/dashboard/manage-blogs",
-        Component:ManageBlogs
-    },
-    {
-        path:"/agent/dashboard/assigned-customers",
-        Component:AgentAssignedCustomers
-    },
-    {
-        path:"/agent/dashboard/agent-claims-management",
-        Component:AgentClaimsManagement
-    },
-    {
-        path:"/agent/dashboard",
-        Component:AgentStatusSection
-    }
-    ]
-},
-{
-    path:"/customer/dashboard",
-    Component:CustomerDashboardLayout,
-    children:[
-    {
-        path:"/customer/dashboard/my-policies",
-        Component:MyPoliciesPage
-    },
-    {
-        path:"/customer/dashboard/payment-status",
-        Component:PaymentStatus
-    },
-    {
-        path:"/customer/dashboard/make-payment/:id",
-        Component:MakePaymentPage
-    },
-    {
-        path:"/customer/dashboard/claim-request",
-        Component:ClaimRequestForm
-    },
-    {
-        path:"/customer/dashboard/reject-policies",
-        Component:UserPolicyStatus
-    }
+      {
+        path: "/login",
+        Component: Login,
+      },
+      {
+        path: "/register",
+        Component: Register,
+      },
+    ],
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
+      <PrivateRouter>
+       <RoleRoute allowedRole='admin' >
+        <AdminDashboardLayout />
+        </RoleRoute>
+      </PrivateRouter>
+    ),
+    children: [
+      {
+        path: "/admin/dashboard/applications",
+        element: <ManageApplications />,
+      },
+
+      {
+        path: "/admin/dashboard/manage-users",
+        Component: ManageUsers,
+      },
+      {
+        path: "/admin/dashboard/policies",
+        Component: ManagePolicies,
+      },
+      {
+        path: "/admin/dashboard/active-agents",
+        Component: ActiveAgents,
+      },
+      {
+        path: "/admin/dashboard/agents/pending",
+        Component: PendingAgentApplications,
+      },
+      {
+        path: "/admin/dashboard/transactions",
+        Component: AdminTransactions,
+      },
+    ],
+  },
+  {
+    path: "/agent/dashboard",
+    element: (
+      <PrivateRouter>
+       <RoleRoute allowedRole={["admin", "agent"]} >
+        <AgentDashboardLayout />
+        </RoleRoute>
+      </PrivateRouter>
+    ),
    
-    ]
-},
-
-
- {
-       path:'/customer/dashboard',
-       Component:CustomerDashboardLayout,
-         children:[
-          { path: '/customer/dashboard/my-policies', 
-            Component: MyPoliciesPage 
-          },
-          {
-            path: '/customer/dashboard/payment-status',
-            Component:PaymentStatus
-          },
-           {
+    children: [
+      {
+        path: "/agent/dashboard/blog-posts",
+        Component: BlogPosts,
+      },
+      {
+        path: "/agent/dashboard/manage-blogs",
+        Component: ManageBlogs,
+      },
+      {
+        path: "/agent/dashboard/assigned-customers",
+        Component: AgentAssignedCustomers,
+      },
+      {
+        path: "/agent/dashboard/agent-claims-management",
+        Component: AgentClaimsManagement,
+      },
+      {
+        path: "/agent/dashboard",
+        Component: AgentStatusSection,
+      },
+    ],
+  },
+  {
+    path: "/customer/dashboard",
+    element: (
+      <PrivateRouter>
+        <RoleRoute  allowedRole="customer" >
+        <CustomerDashboardLayout />
+    </RoleRoute>
+      </PrivateRouter>
+    ),
+    children: [
+      {
+        path: "/customer/dashboard/my-policies",
+        Component: MyPoliciesPage,
+      },
+      {
+        path: "/customer/dashboard/payment-status",
+        Component: PaymentStatus,
+      },
+      {
         path: "/customer/dashboard/make-payment/:id",
-        Component:PaymentPage,
-    },
-        ]
-        },
-]
-)
+        Component: PaymentPage,
+      },
+      {
+        path: "/customer/dashboard/claim-request",
+        Component: ClaimRequestForm,
+      },
+      {
+        path: "/customer/dashboard/reject-policies",
+        Component: UserPolicyStatus,
+      },
+    ],
+  },
+
+  
+]);
 
 export default router

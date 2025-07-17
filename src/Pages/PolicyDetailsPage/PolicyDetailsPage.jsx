@@ -33,7 +33,7 @@ const PolicyDetailsPage = () => {
   if (isError || !policy) {
     return <div className="text-center mt-10 text-red-600">Policy not found.</div>;
   }
-  console.log(policy);
+  
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
@@ -108,7 +108,7 @@ const PolicyDetailsPage = () => {
             >
               Apply for Policy
             </Button>
-           <Button
+           {/* <Button
   onClick={() =>
     navigate("/multipageform", {
       state: {
@@ -119,7 +119,7 @@ const PolicyDetailsPage = () => {
   }
 >
   MultiPage
-</Button>
+</Button> */}
           </div>
         </div>
       </div>

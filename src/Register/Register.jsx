@@ -10,7 +10,6 @@ import { FcGoogle } from "react-icons/fc";
 import { toast } from "react-hot-toast";
 import secureAxios from "../utils/firebaseAxios";
 import UserAuthContext from "../Context/UserAuthContext";
-// ✅ Use secureAxios for authenticated calls
 
 const Register = () => {
   const { registerUser, loginWithGoogle } = useContext(UserAuthContext);
@@ -30,7 +29,7 @@ const Register = () => {
       const userCredential = await registerUser(data.email, data.password);
       const user = userCredential.user;
 
-      // Save user
+      // Save user to DB as customer
       await secureAxios.post("/users", {
         name: data.name,
         email: data.email,
@@ -39,9 +38,16 @@ const Register = () => {
         created_at: new Date().toISOString(),
       });
 
+      // Get JWT for secure access
+      await secureAxios.post("/jwt", { email: data.email });
+
       toast.success("Registration successful!");
 
-      redirectByRole("customer"); // default role for email/password signup
+      // Small delay to ensure cookie is set before redirect
+      setTimeout(() => {
+        redirectByRole("customer");
+      }, 300);
+
       reset();
     } catch (err) {
       toast.error("Registration failed!");
@@ -52,36 +58,45 @@ const Register = () => {
   };
 
   const handleGoogleSignup = async () => {
+    setLoading(true);
     try {
       const result = await loginWithGoogle();
       const user = result.user;
 
-      // ✅ Check if user exists
-      const res = await secureAxios.get(`/users`, {
-        params: { email: user?.email, checkExists: true },
+      // Check if user exists
+      const res = await secureAxios.get("/users", {
+        params: { email: user.email, checkExists: "true" },
       });
 
       if (!res.data.exists) {
-        // If user doesn't exist, create
         await secureAxios.post("/users", {
           name: user.displayName,
           email: user.email,
           photo: user.photoURL || "",
           role: "customer",
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
         });
       }
 
-      // ✅ Get role
+      // Get JWT
+      await secureAxios.post("/jwt", { email: user.email });
+
+      // Get role for redirect
       const userInfo = await secureAxios.get("/users", {
-        params: { email: user?.email },
+        params: { email: user.email },
       });
 
-      redirectByRole(userInfo.data.role);
       toast.success("Google login successful!");
+
+      // Delay for cookie to be set
+      setTimeout(() => {
+        redirectByRole(userInfo.data.role || "customer");
+      }, 300);
     } catch (err) {
       toast.error("Google login failed!");
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -98,11 +113,13 @@ const Register = () => {
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Input id="name" {...register("name", { required: "Name is required" })} />
+              {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" {...register("email", { required: "Email is required" })} />
+              {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
             </div>
 
             <div className="space-y-2">
@@ -119,6 +136,7 @@ const Register = () => {
                   },
                 })}
               />
+              {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
             </div>
 
             <div className="space-y-2">
@@ -136,6 +154,7 @@ const Register = () => {
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
               onClick={handleGoogleSignup}
+              disabled={loading}
             >
               <FcGoogle className="text-xl" />
               Register with Google

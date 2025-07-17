@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom"; // ✅ Corrected from 'react-router'
 import UserAuthContext from "@/Context/UserAuthContext";
+import secureAxios from "@/utils/firebaseAxios"; // ✅ You missed this import
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -14,29 +15,75 @@ const Login = () => {
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
+   const redirectByRole = (role) => {
+    if (role === "admin") navigate("/admin/dashboard");
+    else if (role === "agent") navigate("/agent/dashboard");
+    else navigate("/");
+  };
 
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      await signInUser(data.email, data.password);
+      const result = await signInUser(data.email, data.password);
+      const user = result.user; // ✅ Now we have access to user.email
+      
+ 
+      // ✅ Get role from backend
+      const res = await secureAxios.get(`/users?email=${user.email}`);
+      const role = res.data.role;
+      redirectByRole(role || "customer");
+await secureAxios.post('/jwt', { email: user.email });
       toast.success("Login successful!");
-      navigate("/");
+
+      // ✅ Redirect based on role
+    
+
     } catch (err) {
-      toast.error("Invalid credentials");
+      console.error("Login error:", err);
+      toast.error("Invalid email or password");
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    try {
-      await loginWithGoogle();
-      toast.success("Logged in with Google");
-      navigate("/");
-    } catch (err) {
-      toast.error("Google login failed");
-    }
-  };
+     setLoading(true);
+     try {
+       const result = await loginWithGoogle();
+       const user = result.user;
+      
+        
+       // Check if user exists in DB
+       const res = await secureAxios.get("/users", {
+         params: { email: user.email, checkExists: "true" },
+       });
+ 
+       if (!res.data.exists) {
+         // Create user if not exists
+         await secureAxios.post("/users", {
+           name: user.displayName,
+           email: user.email,
+           photo: user.photoURL || "",
+           role: "customer",
+           created_at: new Date().toISOString(),
+         });
+       }
+ 
+       // Get user info for role redirect
+       const userInfo = await secureAxios.get("/users", {
+         params: { email: user.email },
+       });
+        await secureAxios.post('/jwt', { email: user.email });
+ 
+       toast.success("Google login successful!");
+       redirectByRole(userInfo.data.role || "customer");
+     } catch (err) {
+       toast.error("Google login failed!");
+       console.error(err);
+     } finally {
+       setLoading(false);
+     }
+   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-6 bg-gray-50">
@@ -82,6 +129,7 @@ const Login = () => {
               variant="outline"
               className="w-full flex items-center justify-center gap-2"
               onClick={handleGoogleLogin}
+              disabled={loading}
             >
               <FcGoogle className="text-xl" />
               Login with Google

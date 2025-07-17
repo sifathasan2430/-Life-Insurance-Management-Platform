@@ -170,7 +170,7 @@ const QuotePage = ({nextStep}) => {
             Apply for Policy
           </Button> */}
 {/* -------------------------------------ProgerssBar ------------*/}
-    <Button onClick={nextStep} >ApplyApplication</Button>
+    
    {/* -------------------------------------ProgerssBar ------------*/}       
         </div>
       </form>

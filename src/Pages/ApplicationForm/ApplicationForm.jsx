@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 const ApplicationForm = ({nextStep,prevStep}) => {
   const { state } = useLocation();
-console.log(state)
+
   const policy = state?.policyTitle;
   const policyId = state?.policyId;
 

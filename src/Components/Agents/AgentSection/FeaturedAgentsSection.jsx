@@ -7,7 +7,7 @@ const fetchFeaturedAgents = async () => {
   const response = await secureAxios.get("/users");
 
   // Optional debug log
-  console.log("Fetched users:", response.data);
+  
 
   // Only include agents with `featured: true`
   return response.data.filter((agent) => agent.featured === true);

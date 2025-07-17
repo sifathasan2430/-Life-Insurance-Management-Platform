@@ -26,11 +26,7 @@ const CustomerDashboardLayout = () => {
       icon: <BadgeDollarSign className="w-5 h-5" />,
       label: "Payment Status",
     },
-    {
-      to: "/customer/dashboard/payment",
-      icon: <CreditCard className="w-5 h-5" />,
-      label: "Make Payment",
-    },
+    
     {
       to: "/customer/dashboard/reject-policies",
       label: "Reject Policies",

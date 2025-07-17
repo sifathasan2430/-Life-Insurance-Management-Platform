@@ -51,7 +51,7 @@ const AgentAssignedCustomers = () => {
   };
 
   if (isLoading) return <p>Loading assigned customers...</p>;
-console.log("this is the applications", applications);
+
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Assigned Customers</h2>

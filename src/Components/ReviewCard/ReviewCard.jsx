@@ -4,7 +4,7 @@ import { Star } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 const ReviewCard = ({ review }) => {
-    console.log(review);
+   
   return (
     <Card className="w-full max-w-md shadow-md border border-gray-100 hover:shadow-lg transition duration-300">
       <CardContent className="p-6">

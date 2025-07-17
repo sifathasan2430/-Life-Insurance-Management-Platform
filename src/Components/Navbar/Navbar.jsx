@@ -1,4 +1,4 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import UserAuthContext from "@/Context/UserAuthContext";
 import { Button } from "@/components/ui/button";
@@ -12,11 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "lucide-react";
 import { useState } from "react";
+import secureAxios from "../../utils/firebaseAxios";
 
 const Navbar = () => {
-  const {user,  logout } = useContext(UserAuthContext);
+  const {user,  logout,userRole } = useContext(UserAuthContext);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+const navigate=useNavigate()
   const navLinks = (
     <>
       <NavLink to="/" className="hover:text-orange-500 transition">Home</NavLink>
@@ -24,20 +25,33 @@ const Navbar = () => {
       <NavLink to="/agent-form" className="hover:text-orange-500 transition">Be A Agent</NavLink>
       <NavLink to="/faqs" className="hover:text-orange-500 transition">FAQs</NavLink>
       <NavLink to="/blog" className="hover:text-orange-500 transition">Blogs</NavLink>
-       { (
-        <NavLink to="/admin/dashboard" className="hover:text-orange-500 transition">Dashboard</NavLink>
-      )}
-      { (
-        <NavLink to="/agent/dashboard" className="hover:text-orange-500 transition">AgentDashboard</NavLink>
-      )}
-       { (
-        <NavLink to="/customer/dashboard" className="hover:text-orange-500 transition">UserDashboard</NavLink>
-      )}
-       { (
-        <NavLink to="/claimRequest" className="hover:text-orange-500 transition">ClaimRequest</NavLink>
+      
+      {user && userRole === "customer" && (
+        <>
+          <NavLink
+            to="/customer/dashboard"
+            className="hover:text-orange-500 transition"
+          >
+            User Dashboard
+          </NavLink>
+          <NavLink
+            to="/claimRequest"
+            className="hover:text-orange-500 transition"
+          >
+            Claim Request
+          </NavLink>
+        </>
       )}
     </>
   );
+
+  const handleLogout = async () => {
+  await secureAxios.post("/logout");
+  await logout();
+  navigate("/login");
+};
+
+
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
@@ -108,7 +122,7 @@ const Navbar = () => {
                 </Link>
               </div>
             ) : (
-              <Button onClick={()=> logout()} variant="destructive" size="sm" className="w-full">
+              <Button onClick={handleLogout} variant="destructive" size="sm" className="w-full">
                 Logout
               </Button>
             )}

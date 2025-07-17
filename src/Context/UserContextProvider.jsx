@@ -5,10 +5,12 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   updateProfile,
 } from 'firebase/auth';
+import secureAxios from '../utils/firebaseAxios';
 
 
 
@@ -16,20 +18,38 @@ const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const provider = new GoogleAuthProvider();
+  const [userRole, setUserRole] = useState(null);
+
 
   // Track auth state
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (user) => {
+    const unSubscribe = onAuthStateChanged(auth, async(user) => {
       setUser(user || null);
+
+        
+
+  if (user?.email) {
+        try {
+          const res = await secureAxios.get(`/users?email=${user.email}`);
+
+          setUserRole(res.data?.role || null);
+        } catch (err) {
+          console.error("Failed to fetch role:", err);
+          setUserRole(null);
+        }
+      } else {
+        setUserRole(null);
+      }
       setLoading(false);
     });
+    
 
     return () => unSubscribe();
   }, []);
 
 
    const signInUser=(email, password)=>{
-  return  createUserWithEmailAndPassword(auth, email, password)
+  return  signInWithEmailAndPassword(auth, email, password);
    }
 
   // Register with email and password
@@ -66,7 +86,8 @@ const loginWithGoogle = async () => {
     updateUserProfile,
     loginWithGoogle,
     logout,
-   signInUser
+   signInUser,
+   userRole,
   };
 
   return (
