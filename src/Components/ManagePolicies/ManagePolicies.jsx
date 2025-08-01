@@ -43,6 +43,7 @@ const ManagePolicies = () => {
 
   const [formData, setFormData] = useState({
     title: "",
+    subtitle:"",
     category: "",
     description: "",
     minAge: "",
@@ -58,8 +59,8 @@ const ManagePolicies = () => {
   const { data: policies = [], isLoading } = useQuery({
     queryKey: ["policies"],
     queryFn: async () => {
-      const res = await secureAxios.get("/policies");
-      return res.data.result;
+      const res = await secureAxios.get("/allpolicy");
+      return res.data;
     },
   });
 
@@ -98,6 +99,7 @@ const ManagePolicies = () => {
       setFormData({
         title: "",
         category: "",
+        subtitle:'',
         description: "",
         minAge: "",
         maxAge: "",
@@ -115,6 +117,7 @@ const ManagePolicies = () => {
     setEditingPolicy(policy);
     setFormData({
       title: policy.title,
+      subtitle:policy.subtitle,
       category: policy.category,
       description: policy.description,
       minAge: policy.minAge,
@@ -150,7 +153,9 @@ const ManagePolicies = () => {
               setEditingPolicy(null);
               setFormData({
                 title: "",
+                
                 category: "",
+                subtitle:"",
                 description: "",
                 minAge: "",
                 maxAge: "",
@@ -178,6 +183,12 @@ const ManagePolicies = () => {
       value={formData.title}
       onChange={handleChange}
       placeholder="Policy Title"
+    />
+     <Input
+      name="subtitle"
+      value={formData.subtitle}
+      onChange={handleChange}
+      placeholder="Policy Subtitle"
     />
     <Input
       name="category"

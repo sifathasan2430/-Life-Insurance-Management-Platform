@@ -1,56 +1,50 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ShieldCheck } from 'lucide-react';
-import { Link } from 'react-router-dom'; // if not using React Router, use <a href=...>
+import React from "react"
+import { FaLongArrowAltRight } from "react-icons/fa"
+import {Link} from 'react-router-dom'
 
-const PolicyCard = ({ policy }) => {
+const PolicyCard = ({policy}) => {
+  console.log(policy)
   return (
-    <Card className="hover:shadow-xl transition-shadow duration-300 border border-gray-200 overflow-hidden flex flex-col">
+    <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 flex flex-col h-full">
       {/* Image */}
-      <div className="h-40 w-full overflow-hidden">
+      <div className="w-full h-[220px] overflow-hidden">
         <img
           src={policy.image}
           alt={policy.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />
       </div>
 
       {/* Content */}
-      <div className="flex flex-col flex-grow px-5 py-4 justify-between">
-        <CardHeader className="p-0 mb-2">
-          <div className="flex items-start justify-between">
-            <CardTitle className="text-lg font-semibold text-gray-800 leading-tight">
-              {policy.title}
-            </CardTitle>
-            <Badge className="bg-[#ff8c00] text-white flex items-center gap-1">
-              <ShieldCheck className="h-4 w-4" />
-              Popular
-            </Badge>
-          </div>
-        </CardHeader>
-
-        <CardContent className="p-0 text-sm text-gray-600 space-y-2">
-          <div>
-            <span className="font-medium text-gray-800">Coverage:</span> {policy.coverage}
-          </div>
-          <div>
-            <span className="font-medium text-gray-800">Duration:</span> {policy.duration}
-          </div>
-        </CardContent>
-
-        {/* View Details Button */}
-        <div className="mt-4">
-          <Link
-            to={`/policy/${policy._id}`}
-            className="inline-block text-sm font-semibold text-[#ff8c00] hover:underline"
-          >
-            View Details →
+      <div className="p-5 flex flex-col flex-1">
+        {/* Title */}
+        <h4 className="text-xl font-semibold mb-2">
+          <Link to={`/policy/${policy._id}`} className="hover:text-orange-600 transition-colors">
+            {policy.title}
           </Link>
-        </div>
-      </div>
-    </Card>
-  );
-};
+        </h4>
 
-export default PolicyCard;
+        {/* Divider */}
+        <div className="border-b border-gray-200 mb-3"></div>
+
+        {/* Description */}
+        <p className="text-gray-600 mb-4 flex-1 line-clamp-3">
+          {policy?.description?.length > 120
+            ? `${policy.description.slice(0, 120)}...`
+            : policy?.description}
+        </p>
+
+        {/* Read More Link */}
+        <Link
+          to={`/policy/${policy._id}`}
+          className="flex items-center gap-2 text-orange-500 hover:text-orange-700 font-medium mt-auto"
+        >
+          <span>Read More</span>
+          <FaLongArrowAltRight />
+        </Link>
+      </div>
+    </div>
+  )
+}
+
+export default PolicyCard
