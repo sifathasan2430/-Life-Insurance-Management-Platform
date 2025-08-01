@@ -33,7 +33,7 @@ const bannerSlides = [
       "Ensure your loved ones are protected with our straightforward and affordable life insurance plans.",
     image: "https://i.ibb.co/FkH8fHcF/health-insurance-assurnace-medic.jpg",
     video: "https://www.youtube.com/watch?v=SZEflIVnhH8",
-    link: "/about-us",
+    link: "/all-policies",
   },
 ];
 

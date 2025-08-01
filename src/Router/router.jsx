@@ -35,6 +35,7 @@ import MultiStepForm from "../Components/MultiStepForm/MultiStepForm";
 import AgentClaimsManagement from "../Layout/AgentLayout/AgentDashboard/AgentClaimsManagement/AgentClaimsManagement";
 import PrivateRouter from "./PrivateRoute/PrivateRouter";
 import RoleRoute from "./RoleRouter/RoleRoute";
+import AboutUs from "../Pages/AboutUs/AboutUs";
 
 
 
@@ -122,6 +123,10 @@ const router = createBrowserRouter([
         path: "/register",
         Component: Register,
       },
+      {
+        path:'/about',
+        Component:AboutUs
+      }
     ],
   },
   {
