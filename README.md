@@ -4,14 +4,7 @@ Client Repo: [b11a12-client-side-sifathasan2430](https://github.com/Programming-
 
 > A modern, secure, role-based MERN Stack application for managing life insurance policies, applications, quotes, claims, and transactions. Built with Firebase Authentication, JWT Authorization, Stripe Payments, and rich dashboards for Admins, Agents, and Customers.
 
-<div align="center">
-  <details>
-    <summary style="cursor: pointer; font-weight: bold; color: #0366d6;">📷 Click to View Screenshot</summary>
-    <div style="margin-top: 10px;">
-      <img src="https://ibb.co.com/xqGhBN32" alt="Life Insurance Management Platform Screenshot" style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-    </div>
-  </details>
-</div>
+
 
 ---
 ## 🧑‍💼 Admin Login Credentials
