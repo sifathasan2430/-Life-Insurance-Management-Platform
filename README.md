@@ -1,4 +1,11 @@
-<img height='500px' src="https://ibb.co.com/xqGhBN32" alt="Screenshot-2025-06-25-163056" border="0">
+<div align="center">
+  <details>
+    <summary style="cursor: pointer; font-weight: bold; color: #0366d6;">📷 Click to View Screenshot</summary>
+    <div style="margin-top: 10px;">
+      <img src="https://i.ibb.co/xqGhBN32/Screenshot-2025-06-25-163056.jpg" alt="Life Insurance Management Platform Screenshot" style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    </div>
+  </details>
+</div>
 # 🛡️ Life Insurance Management Platform
 Live URL: [https://life-insurance-management.web.app](https://life-insurance-management.web.app)  
 Client Repo: [b11a12-client-side-sifathasan2430](https://github.com/Programming-Hero-Web-Course4/b11a12-client-side-sifathasan2430)  
