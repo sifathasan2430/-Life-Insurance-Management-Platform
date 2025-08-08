@@ -1,9 +1,7 @@
 <div align="center">
   <details>
     <summary style="cursor: pointer; font-weight: bold; color: #0366d6;">📷 Click to View Screenshot</summary>
-    <div style="margin-top: 10px;">
-      <img src="https://i.ibb.co/xqGhBN32/Screenshot-2025-06-25-163056.jpg" alt="Life Insurance Management Platform Screenshot" ;">
-    </div>
+  <img height='500px' src="https://ibb.co.com/xqGhBN32" alt="Screenshot-2025-06-25-163056" border="0">
   </details>
 </div>
 # 🛡️ Life Insurance Management Platform
