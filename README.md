@@ -2,7 +2,7 @@
   <details>
     <summary style="cursor: pointer; font-weight: bold; color: #0366d6;">📷 Click to View Screenshot</summary>
     <div style="margin-top: 10px;">
-      <img src="https://i.ibb.co/xqGhBN32/Screenshot-2025-06-25-163056.jpg" alt="Life Insurance Management Platform Screenshot" style="max-width: 100%; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+      <img src="https://i.ibb.co/xqGhBN32/Screenshot-2025-06-25-163056.jpg" alt="Life Insurance Management Platform Screenshot" ;">
     </div>
   </details>
 </div>
