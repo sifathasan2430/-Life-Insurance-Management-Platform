@@ -1,27 +1,24 @@
 # 🛡️ Life Insurance Management Platform
-
 Live URL: [https://life-insurance-management.web.app](https://life-insurance-management.web.app)  
 Client Repo: [b11a12-client-side-sifathasan2430](https://github.com/Programming-Hero-Web-Course4/b11a12-client-side-sifathasan2430)  
 
-
 > A modern, secure, role-based MERN Stack application for managing life insurance policies, applications, quotes, claims, and transactions. Built with Firebase Authentication, JWT Authorization, Stripe Payments, and rich dashboards for Admins, Agents, and Customers.
 
+<div align="center">
+  <div style="max-height: 500px; overflow-y: auto; border-radius: 10px; margin-bottom: 20px;">
+    <img src="https://i.ibb.co/xqGhBN32/life-insurance-screenshot.png" alt="Life Insurance Management Platform Screenshot" style="max-width: 100%; height: auto;">
+  </div>
+</div>
+
 ---
-
 ## 🧑‍💼 Admin Login Credentials
-
 Email: admin@gmail.com
 Password: admiN243028
-
 ## 🧑‍💼 Agent Login Credentials
-
 Email: agent@gmail.com
 Password: agenT1234
-
 ---
-
 ## 🚀 Features
-
 - ✅ **Role-Based Dashboards**: Separate dashboards for Admin, Agent, and Customer.
 - 🔒 **JWT-Secured APIs**: Auth-protected routes with role validation using JWT stored in HttpOnly cookies.
 - 📊 **Stripe Payment Integration**: Premium payments with live status tracking and transaction management.
@@ -40,44 +37,32 @@ Password: agenT1234
 - 🎨 **Tailwind CSS + SweetAlert**: Styled using Tailwind with modern alert modals for better UX.
 - 🔍 **Search and Filter**: Search by keyword (case-insensitive) and category filter on policies.
 - 📅 **Pagination**: Server-side pagination implemented on All Policies page.
-
 ---
-
 ## 📌 Pages Overview
-
 ### 🌐 Public Pages
-
 - `/` Home — Hero, Featured Policies, Blogs, Testimonials, Agents, Subscription
 - `/all-policies` — All Policies with category filter, search & pagination
 - `/blog` — Blogs overview with modal & visit tracking
 - `/policy/:id` — Full policy details page
 - `/login`, `/register` — Firebase-auth powered login/register with validation & Google login
-
 ---
-
 ### 🔐 Private Pages
-
 #### 🔧 Admin Dashboard (`/dashboard/admin`)
 - Manage Applications (Assign Agent, Approve/Reject with feedback)
 - Manage Users (Role promotion/demotion)
 - Manage Policies (Create, Edit, Delete)
 - Manage Transactions (View all payments)
-
 #### 🧑‍💼 Agent Dashboard (`/dashboard/agent`)
 - Assigned Customers (Approve/Reject, update application status)
 - Manage Blogs (CRUD for their own blogs)
 - Policy Clearance (View & approve claims)
-
 #### 👤 Customer Dashboard (`/dashboard`)
 - My Policies (Track status, review)
 - Payment Status (Stripe pay button for due policies)
 - Claim Request (File insurance claims with status)
 - Profile (Update name, photo, view last login)
-
 ---
-
 ## 🔧 Tech Stack
-
 | Frontend | Backend (optional setup) |
 |----------|--------------------------|
 | React + Vite | Express.js |
@@ -87,11 +72,8 @@ Password: agenT1234
 | React Hook Form | Stripe SDK |
 | SweetAlert2 | dotenv |
 | Tailwind CSS | Firebase Admin SDK |
-
 ---
-
 ## ⚙️ Environment Variables (Client)
-
 ```env
 VITE_FIREBASE_API_KEY=AIzaSyAiuI88xPk8MVh6WXQwO1vjzvbKcQm45Z8
 VITE_FIREBASE_AUTH_DOMAIN=life-insurance-management.firebaseapp.com
@@ -99,5 +81,3 @@ VITE_FIREBASE_PROJECT_ID=life-insurance-management
 VITE_FIREBASE_STORAGE_BUCKET=life-insurance-management.firebasestorage.app
 VITE_FIREBASE_MESSAGING_SENDER_ID=78146085846
 VITE_FIREBASE_APP_ID=1:78146085846:web:02c5ac3239580162673a77
-
-
