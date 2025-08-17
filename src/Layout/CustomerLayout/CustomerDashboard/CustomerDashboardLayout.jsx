@@ -18,6 +18,11 @@ import {
 const CustomerDashboardLayout = () => {
   const navLinks = [
     {
+      to: "/customer/dashboard/overview",
+      icon: <LayoutDashboard className="w-5 h-5" />,
+      label: "Overview",
+    },
+    {
       to: "/customer/dashboard/my-policies",
       icon: <FileText className="w-5 h-5" />,
       label: "My Policies",

@@ -6,7 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 const Profile = () => {
   const { user, updateUserPhoto, updateUserProfile } = useContext(UserAuthContext);
   const queryClient = useQueryClient();
-
+console.log(user)
   // Fetch backend user (mobile + address)
   const { data: BackendUser } = useQuery({
     queryKey: ["backendUser", user?.email],
@@ -21,7 +21,8 @@ const Profile = () => {
   const [editingField, setEditingField] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [profileName, setProfileName] = useState(user?.displayName || "");
-  const [profileImage, setProfileImage] = useState(user?.photoURL || "");
+  const [profileImage, setProfileImage] = useState(user?.photoURL
+ || "");
   const [mobileNumber, setMobileNumber] = useState("");
   const [address, setAddress] = useState("");
 
@@ -42,7 +43,7 @@ const Profile = () => {
   // --- Backend mutation (Phone + Address) ---
   const updateBackendMutation = useMutation({
     mutationFn: async (updatedData) => {
-      const response = await secureAxios.patch("/users/update", {
+      const response = await secureAxios.patch(`/users/update?email=${user?.email}`, {
         email: user?.email,
         ...updatedData,
       });
@@ -68,7 +69,8 @@ const Profile = () => {
       <div className="flex flex-col items-center">
         <div className="relative w-28 h-28">
           <img
-            src={profileImage || "https://via.placeholder.com/150"}
+            src={user?.photoURL
+}
             alt="User"
             className="w-28 h-28 rounded-full object-cover border-2 border-[#ff9a68]"
           />

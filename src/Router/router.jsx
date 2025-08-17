@@ -38,6 +38,7 @@ import RoleRoute from "./RoleRouter/RoleRoute";
 import AboutUs from "../Pages/AboutUs/AboutUs";
 import EditPolices from "../Components/ManagePolicies/editPolices/EditPolices";
 import AdminOverview from "../Pages/AdminOverview";
+import Overview from "../Pages/Overview/Overview.jsx";
 
 
 
@@ -250,6 +251,10 @@ const router = createBrowserRouter([
       {
         path: "/customer/dashboard/profile",
         Component: ProfilePage,
+      },
+      {
+        path: "/customer/dashboard/overview",
+        Component: Overview,
       },
     ],
   },
