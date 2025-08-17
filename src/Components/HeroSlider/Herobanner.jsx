@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaPlay } from "react-icons/fa";
 import { GoDot, GoDotFill } from "react-icons/go";
+import Container from "../Container/Container";
 
 const bannerSlides = [
   {
@@ -13,7 +14,7 @@ const bannerSlides = [
       "Choose us for comprehensive insurance coverage that safeguards what matters most, personalized to your unique needs.",
     image: "https://noxiy.nextwpcook.com/wp-content/uploads/2023/07/life-insurance-1.jpg",
     video: "https://www.youtube.com/watch?v=SZEflIVnhH8",
-    link: "/about-us",
+    link: "/all-policies",
   },
   {
     id: 2,
@@ -23,7 +24,7 @@ const bannerSlides = [
       "Choose us for comprehensive insurance coverage that safeguards what matters most, personalized to your unique needs.",
     image: "https://iaeglobal.in/wp-content/uploads/Guide-to-Choosing-the-Best-University-for-Studying-Abroad-copy.webp",
     video: "https://www.youtube.com/watch?v=SZEflIVnhH8",
-    link: "/about-us",
+    link: "/all-policies",
   },
   {
     id: 3,
@@ -85,7 +86,7 @@ const Herobanner = () => {
   const slide = bannerSlides[currentSlide];
 
   return (
-    <div className="relative w-full overflow-hidden bg-gray-50 min-h-[85vh] flex items-center justify-center">
+    <div className="relative w-full  overflow-hidden bg-gray-50 min-h-[85vh] flex items-center justify-center">
       {/* Animated Aurora Background */}
       <div className="absolute top-0 left-0 w-full h-full z-0">
         <motion.div 
@@ -100,7 +101,7 @@ const Herobanner = () => {
         />
       </div>
 
-      <div className="container mx-auto px-4 z-10">
+      <Container className=" z-10">
         <AnimatePresence mode="wait">
           <motion.div
             key={slide.id}
@@ -153,7 +154,7 @@ const Herobanner = () => {
             </motion.div>
           </motion.div>
         </AnimatePresence>
-      </div>
+      </Container>
       
       {/* Pagination Dots */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 z-20">

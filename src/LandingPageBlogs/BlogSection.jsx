@@ -3,6 +3,9 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import secureAxios from '../utils/firebaseAxios';
 import BlogCard from '../Blogs/BlogCard/BlogCard';
+import Container from '../Components/Container/Container';
+import Section from '../Components/Section/Section';
+import SectionHeader from '../SectionHeader/SectionHeader';
 
 const fetchLatestBlogs = async () => {
   const response = await secureAxios.get('/blogs/latest');
@@ -17,11 +20,11 @@ const BlogSection = () => {
 
   if (isLoading) {
     return (
-      <section className="py-20 bg-gray-100">
+      <Section >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-[#ff8c00] mx-auto"></div>
         </div>
-      </section>
+      </Section>
     );
   }
 
@@ -36,17 +39,10 @@ const BlogSection = () => {
   }
 
   return (
-    <section className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <Container className="py-10 md:py-20 ">
+     
         {/* Heading */}
-        <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-800 mb-4">
-            <span className="text-[#ff8c00]">Latest</span> Insurance Insights
-          </h2>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover our most recent articles on insurance, finance, and personal protection.
-          </p>
-        </div>
+        <SectionHeader subtitle={' Discover our most recent articles on insurance, finance, and personal protection.'} title={'Insurance Insights'}/>
 
         {/* Blog Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -68,8 +64,8 @@ const BlogSection = () => {
             View All Articles →
           </a>
         </div>
-      </div>
-    </section>
+    
+    </Container>
   );
 };
 

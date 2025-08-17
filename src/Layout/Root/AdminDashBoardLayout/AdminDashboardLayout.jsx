@@ -7,6 +7,7 @@ import {
   UserCheck,
   UserPlus,
   Menu,
+  User,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,11 @@ const AdminDashboardLayout = () => {
   const [agentMenuOpen, setAgentMenuOpen] = useState(false);
 
   const navLinks = [
+    {
+      to:'/admin/dashboard/overview',
+      icon:<User/>,
+      label:'Overview'
+    },
     {
       to: "/admin/dashboard/applications",
       icon: <LayoutDashboard className="w-5 h-5" />, 
@@ -40,7 +46,11 @@ const AdminDashboardLayout = () => {
       icon: <BadgeDollarSign className="w-5 h-5" />, 
       label: "Manage Transactions"
     },
-    
+    {
+      to: "/admin/dashboard/profile",
+      icon: <User className="w-5 h-5" />,
+      label: "Profile"
+    },
   ];
 
   const baseClass =

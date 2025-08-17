@@ -3,6 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import ReviewCard from "../ReviewCard";
 import secureAxios from "../../../utils/firebaseAxios";
+import Container from "../../Container/Container";
+import Section from "../../Section/Section";
+import SectionHeader from "../../../SectionHeader/SectionHeader";
 
 
 const fetchReviews = async () => {
@@ -20,13 +23,11 @@ const ReviewSection = () => {
     queryKey: ["reviews"],
     queryFn: fetchReviews,
   });
-
+  
   return (
-    <section className="py-12 px-4 bg-gray-50">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-10">
-          Customer Reviews
-        </h2>
+ 
+      <Section>
+        <SectionHeader title={'Review'}/>
 
         {isLoading ? (
           <div className="text-center text-gray-500">Loading reviews...</div>
@@ -37,14 +38,14 @@ const ReviewSection = () => {
         ) : reviews?.length === 0 ? (
           <div className="text-center text-gray-500">No reviews yet.</div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-4">
             {reviews.map((review) => (
               <ReviewCard key={review._id} review={review} />
             ))}
           </div>
         )}
-      </div>
-    </section>
+      </Section>
+   
   );
 };
 

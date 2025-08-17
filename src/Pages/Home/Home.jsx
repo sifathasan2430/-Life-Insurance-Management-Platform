@@ -5,20 +5,23 @@ import BenefitsSection from '../../Components/Benefits/BenefitsSection';
 import BlogSection from '../../LandingPageBlogs/Blogsection';
 import ReviewSection from '../../Components/ReviewCard/ReviewSection/ReviewSection';
 import FeaturedAgentsSection from "../../Components/Agents/AgentSection/FeaturedAgentsSection";
-import NewsletterSubscription from '../../Components/NewsLatter/NewsletterSubscription';
+import Newsletter from '../../Components/NewsLatter/Newsletter';
 import Herobanner from '../../Components/HeroSlider/Herobanner';
+import SalesPromotion from '../../Components/SalesPromotion/SalesPromotion';
 
 const Home = () => {
     return (
         
-        <div className="pt-10 px-4 md:px-8 lg:px-16">
+        <div className="">
                
                <Herobanner/>
-               <PopularPolicies/>
-               <BenefitsSection/>
-               <BlogSection/>
-               <ReviewSection/>
-               <FeaturedAgentsSection />
+               <PopularPolicies className=''/>
+               <SalesPromotion/>
+               <BenefitsSection className=''/>
+               <BlogSection className=''/>
+               <ReviewSection className=''/>
+               <FeaturedAgentsSection className='' />
+               <Newsletter />
               
         </div>
     );

@@ -64,8 +64,8 @@ const navigate=useNavigate()
 
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
+    <header className="bg-gray-300 shadow-md sticky top-0 z-50">
+      <div className="container mx-auto px-4  flex items-center justify-between h-16">
         {/* Logo */}
         <Link to="/" className="text-xl font-bold text-orange-600">
           LifeSure
@@ -81,10 +81,16 @@ const navigate=useNavigate()
           {!user?.email ? (
             <>
               <Link to="/login">
-                <Button variant="outline" size="sm">Login</Button>
+              <button className="px-6 py-2 rounded-2xl font-medium text-white bg-[#fe9a00] hover:bg-[#e68900] shadow-md transition-all duration-300">
+  Login
+</button>
+
+
               </Link>
               <Link to="/register">
-                <Button size="sm">Register</Button>
+               <button className="px-6 py-2 rounded-2xl font-medium text-[#fe9a00] border border-[#fe9a00] bg-white hover:bg-[#fff4e6] shadow-md transition-all duration-300">
+  Logout
+</button>
               </Link>
             </>
           ) : (

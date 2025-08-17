@@ -6,6 +6,7 @@ import {
   CreditCard,
   Menu,
   DeleteIcon,
+  User,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,13 +27,16 @@ const CustomerDashboardLayout = () => {
       icon: <BadgeDollarSign className="w-5 h-5" />,
       label: "Payment Status",
     },
-    
     {
       to: "/customer/dashboard/reject-policies",
       label: "Reject Policies",
       icon: <DeleteIcon className="w-5 h-5" />
     },
-    
+    {
+      to: "/customer/dashboard/profile",
+      label: "Profile",
+      icon: <User className="w-5 h-5" />
+    },
   ];
 
   const baseClass =

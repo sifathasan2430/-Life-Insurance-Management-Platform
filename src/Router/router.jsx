@@ -36,6 +36,8 @@ import AgentClaimsManagement from "../Layout/AgentLayout/AgentDashboard/AgentCla
 import PrivateRouter from "./PrivateRoute/PrivateRouter";
 import RoleRoute from "./RoleRouter/RoleRoute";
 import AboutUs from "../Pages/AboutUs/AboutUs";
+import EditPolices from "../Components/ManagePolicies/editPolices/EditPolices";
+import AdminOverview from "../Pages/AdminOverview";
 
 
 
@@ -91,6 +93,10 @@ const router = createBrowserRouter([
         Component: LifeInsuranceFAQ,
       },
       {
+        path:"edit-policy",
+        Component:EditPolices
+      },
+      {
         path: "/blog",
         Component: BlogPage,
       },
@@ -140,6 +146,10 @@ const router = createBrowserRouter([
     ),
     children: [
       {
+    path:'/admin/dashboard/overview',
+    element:<AdminOverview/>
+      },
+      {
         path: "/admin/dashboard/applications",
         element: <ManageApplications />,
       },
@@ -163,6 +173,10 @@ const router = createBrowserRouter([
       {
         path: "/admin/dashboard/transactions",
         Component: AdminTransactions,
+      },
+      {
+        path: "/admin/dashboard/profile",
+        Component: ProfilePage,
       },
     ],
   },
@@ -197,6 +211,10 @@ const router = createBrowserRouter([
         path: "/agent/dashboard",
         Component: AgentStatusSection,
       },
+      {
+        path: "/agent/dashboard/profile",
+        Component: ProfilePage,
+      },
     ],
   },
   {
@@ -229,10 +247,14 @@ const router = createBrowserRouter([
         path: "/customer/dashboard/reject-policies",
         Component: UserPolicyStatus,
       },
+      {
+        path: "/customer/dashboard/profile",
+        Component: ProfilePage,
+      },
     ],
   },
 
   
 ]);
 
-export default router
+export default router;

@@ -1,5 +1,8 @@
 import React from 'react';
 import BenefitCard from './BenefitCard/BenefitCard';
+import Container from '../Container/Container';
+import Section from '../Section/Section';
+import SectionHeader from '../../SectionHeader/SectionHeader';
 
 const benefitsData = [
   {
@@ -22,14 +25,14 @@ const benefitsData = [
 
 const BenefitsSection = () => {
   return (
-    <section className="max-w-7xl mx-auto px-4 md:px-6 py-12">
-      <h2 className="text-3xl font-bold text-center mb-8">Benefits of LifeSure</h2>
+    <Section>
+    <SectionHeader title={'Benefits of LifeSure'}/>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {benefitsData.map((benefit, idx) => (
           <BenefitCard key={idx} {...benefit} />
         ))}
       </div>
-    </section>
+    </Section>
   );
 };
 

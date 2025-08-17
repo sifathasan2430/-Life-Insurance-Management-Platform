@@ -5,6 +5,7 @@ import {
   FileText,
   Pencil,
   Menu,
+  User,
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -40,6 +41,11 @@ const AgentDashboardLayout = () => {
       to: "/agent/dashboard",
       icon: <LayoutDashboard className="w-5 h-5" />,
       label: "Feedback Overview",
+    },
+    {
+      to: "/agent/dashboard/profile",
+      icon: <User className="w-5 h-5" />,
+      label: "Profile",
     }
   ];
 
