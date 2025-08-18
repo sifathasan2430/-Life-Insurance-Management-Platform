@@ -1,138 +1,132 @@
-import React, { useContext, useEffect, useState } from "react";
-import secureAxios from "../../utils/firebaseAxios";
-import UserAuthContext from "../../Context/UserAuthContext";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useContext, useEffect } from 'react';
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button"
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import UserAuthContext from '../../Context/UserAuthContext';
+import secureAxios from '../../utils/firebaseAxios';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
 const Profile = () => {
-  const { user, updateUserPhoto, updateUserProfile } = useContext(UserAuthContext);
-  const queryClient = useQueryClient();
-console.log(user)
-  // Fetch backend user (mobile + address)
-  const { data: BackendUser } = useQuery({
-    queryKey: ["backendUser", user?.email],
+  const { user } = useContext(UserAuthContext)
+  const queryClient = useQueryClient()
+
+  const { data: users, isLoading, isFetched } = useQuery({
+    queryKey: ['users', user?.email],
     queryFn: async () => {
-      const response = await secureAxios.get(`/users?email=${user?.email}`);
-      return response.data;
-    },
-    enabled: !!user?.email,
-  });
-
-  // Local states
-  const [editingField, setEditingField] = useState("");
-  const [inputValue, setInputValue] = useState("");
-  const [profileName, setProfileName] = useState(user?.displayName || "");
-  const [profileImage, setProfileImage] = useState(user?.photoURL
- || "");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [address, setAddress] = useState("");
-
-  // Sync BackendUser data after load
-  useEffect(() => {
-    if (BackendUser) {
-      setMobileNumber(BackendUser.mobileNumber || "");
-      setAddress(BackendUser.address || "");
+      const response = await secureAxios.get(`/users?email=${user?.email}`)
+      return response.data
     }
-  }, [BackendUser]);
+  })
 
-  // --- Firebase mutation (Name + Image) ---
-  const handleFirebaseUpdate = async () => {
-    await updateUserProfile(profileName, profileImage);
-    queryClient.invalidateQueries(["backendUser"]);
-  };
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      photo: '',
+      phoneNumber: '',
+      address: '',
+    }
+  })
 
-  // --- Backend mutation (Phone + Address) ---
-  const updateBackendMutation = useMutation({
-    mutationFn: async (updatedData) => {
-      const response = await secureAxios.patch(`/users/update?email=${user?.email}`, {
-        email: user?.email,
-        ...updatedData,
-      });
-      return response.data;
+  useEffect(() => {
+    if (users) {
+      reset({
+        photo: users.photo || '',
+        phoneNumber: users.phoneNumber || '',
+        address: users.address || '',
+      })
+    }
+  }, [users, reset])
+
+  const muntation = useMutation({
+    mutationFn: async (data) => {
+      const response = await secureAxios.patch(`/users/update`, data, {
+        params: { email: user?.email }
+      })
+      return response.data
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["backendUser"]);
-      setEditingField("");
-    },
-  });
-
-  const handleSave = () => {
-    if (editingField === "phone") {
-      updateBackendMutation.mutate({ mobileNumber: inputValue });
-    } else if (editingField === "address") {
-      updateBackendMutation.mutate({ address: inputValue });
+      queryClient.invalidateQueries({ queryKey: ['users', user?.email] })
     }
-  };
+  })
+
+  const handledatasubmit = async (data) => {
+    muntation.mutate(data)
+  }
 
   return (
-    <div className="bg-white shadow-xl rounded-xl p-8 max-w-md mx-auto mt-10 border-t-4 border-[#ff9a68]">
-      {/* Firebase profile section */}
-      <div className="flex flex-col items-center">
-        <div className="relative w-28 h-28">
-          <img
-            src={user?.photoURL
-}
-            alt="User"
-            className="w-28 h-28 rounded-full object-cover border-2 border-[#ff9a68]"
-          />
+    <div className="max-w-md mx-auto mt-10 bg-white dark:bg-neutral-900 shadow-lg rounded-2xl p-6 space-y-6 border border-neutral-200 dark:border-neutral-700">
+      {isLoading && <h1 className="text-center text-neutral-500">Loading...</h1>}
+
+      {/* Profile Header */}
+      {users && (
+        <div className="flex flex-col items-center space-y-2">
+          <Avatar className="h-20 w-20 ring-2 ring-orange-400 shadow-md">
+            <AvatarImage src={users?.photo || ''} />
+            <AvatarFallback className="bg-orange-200 text-orange-800 font-semibold">
+              {user?.email?.[0]?.toUpperCase() || 'U'}
+            </AvatarFallback>
+          </Avatar>
+          <h2 className="text-xl font-semibold text-neutral-800 dark:text-neutral-100">
+            {user?.displayName || "User"}
+          </h2>
+          <p className="text-sm text-neutral-500">{user?.email}</p>
         </div>
+      )}
 
-        <input
-          type="text"
-          value={profileName}
-          onChange={(e) => setProfileName(e.target.value)}
-          className="mt-2 border rounded px-3 py-1"
-        />
-        <button
-          onClick={handleFirebaseUpdate}
-          className="mt-2 bg-[#ff9a68] text-white px-4 py-2 rounded hover:bg-[#ff7a45]"
-        >
-          Update Profile (Firebase)
-        </button>
-
-        <p className="text-gray-500 mt-2">{user?.email}</p>
-      </div>
-
-      {/* Backend fields */}
-      <div className="mt-8 space-y-5">
-        {[
-          { key: "phone", label: "Phone", value: mobileNumber },
-          { key: "address", label: "Address", value: address },
-        ].map((field) => (
-          <div key={field.key} className="flex flex-col">
-            <h3 className="text-lg font-semibold">{field.label}</h3>
-
-            {editingField === field.key ? (
-              <div className="flex space-x-2 mt-1">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  className="border rounded px-3 py-2 flex-1 focus:outline-none focus:ring-2 focus:ring-[#ff9a68]"
-                />
-                <button
-                  onClick={handleSave}
-                  className="bg-[#ff9a68] text-white px-4 py-2 rounded hover:bg-[#ff7a45]"
-                >
-                  Save
-                </button>
-              </div>
-            ) : (
-              <div className="flex justify-between items-center mt-1">
-                <p className="text-gray-600">{field.value || "Not available"}</p>
-                <button
-                  onClick={() => {
-                    setEditingField(field.key);
-                    setInputValue(field.value || "");
-                  }}
-                  className="text-[#ff9a68] hover:underline"
-                >
-                  Edit
-                </button>
-              </div>
-            )}
+      {isFetched && (
+        <form onSubmit={handleSubmit(handledatasubmit)} className="space-y-5">
+          {/* Photo */}
+          <div>
+            <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1 block">
+              Profile Image URL
+            </label>
+            <Input
+              {...register('photo')}
+              placeholder={users ? users?.photo : ''}
+              type="text"
+              className="rounded-lg focus:ring-2 focus:ring-orange-400"
+            />
           </div>
-        ))}
-      </div>
+          <Separator />
+
+          {/* Address */}
+          <div>
+            <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1 block">
+              Address
+            </label>
+            <Input
+              {...register('address')}
+              placeholder={users ? users?.address : ''}
+              type="text"
+              className="rounded-lg focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
+          <Separator />
+
+          {/* Phone */}
+          <div>
+            <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1 block">
+              Phone Number
+            </label>
+            <Input
+              {...register('phoneNumber')}
+              placeholder={users ? users?.phoneNumber : ''}
+              type="text"
+              className="rounded-lg focus:ring-2 focus:ring-orange-400"
+            />
+          </div>
+
+          {/* Submit */}
+          <Button
+            className="w-full py-2 mt-4 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl shadow-md transition-all"
+            type="submit"
+          >
+            Update Profile
+          </Button>
+        </form>
+      )}
     </div>
   );
 };

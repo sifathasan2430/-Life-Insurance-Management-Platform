@@ -2,8 +2,8 @@ import React from "react"
 import { FaLongArrowAltRight } from "react-icons/fa"
 import {Link} from 'react-router-dom'
 
-const PolicyCard = ({policy}) => {
-  console.log(policy)
+const PolicyCard = ({policy,baserate=false}) => {
+  
   return (
     <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-300 flex flex-col h-full">
       {/* Image */}
@@ -33,7 +33,9 @@ const PolicyCard = ({policy}) => {
             ? `${policy.description.slice(0, 120)}...`
             : policy?.description}
         </p>
-
+{
+  baserate &&  <p className="text-sm font-bold">Baserate:${policy?.baseRate}</p>
+}
         {/* Read More Link */}
         <Link
           to={`/policy/${policy._id}`}
