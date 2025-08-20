@@ -2,11 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import UsePaginationHook from "./UsePagination";
 import PolicyCard from "../../Components/Policiessection/PoliciessCard/PolicyCard";
-import Input from "../../CustomComponents/Input";
-import Select from "../../CustomComponents/Select";
-import Container from "../../CustomComponents/Container";
-import SectionHeader from "../../CustomComponents/SectionHeader";
-import Pagination from "../../CustomComponents/Pagination";
+import {Input,Pagination,Select,SectionHeader,Container} from '@/CustomComponents/index'
 import { useDebounce } from "use-debounce";
 const PoliciesPage = () => {
   const [searchInput, setSearchInput] = useState("");
