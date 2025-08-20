@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button"
 
 const Pagination = ({ page, setPage, totalPages }) => {
+  
   return (
     <div className="mt-10 flex justify-center items-center gap-2 flex-wrap">
       <Button

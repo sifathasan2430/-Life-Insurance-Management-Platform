@@ -11,7 +11,7 @@ const PoliciesPage = () => {
   const [sort, setSort] = useState(""); // ✅ sort state
   const limit = 6;
 
-   const debouncedSearch=useDebounce(searchInput,1000)
+   const [debouncedSearch]=useDebounce(searchInput,1000)
 
   const { data, isLoading, isError, error, isFetching } = UsePaginationHook(
     page,
@@ -22,11 +22,9 @@ const PoliciesPage = () => {
   );
 
   const totalPages = data ? Math.ceil(data.totalCount / limit) : 1;
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, category, sort]);
-
+ useEffect(()=>{
+  setPage(1)
+ },[debouncedSearch,category,sort])
   return (
    <Container>
     {/* header */}
