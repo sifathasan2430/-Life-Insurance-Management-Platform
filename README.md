@@ -1,7 +1,7 @@
 # 🛡️ Life Insurance Management Platform
 
 Live URL: [https://life-insurance-management.web.app](https://life-insurance-management.web.app)  
-Client Repo: [b11a12-client-side-sifathasan2430](https://github.com/Programming-Hero-Web-Course4/b11a12-client-side-sifathasan2430)  
+
 
 
 > A modern, secure, role-based MERN Stack application for managing life insurance policies, applications, quotes, claims, and transactions. Built with Firebase Authentication, JWT Authorization, Stripe Payments, and rich dashboards for Admins, Agents, and Customers.
