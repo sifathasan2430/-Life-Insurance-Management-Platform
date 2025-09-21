@@ -8,7 +8,6 @@ const PoliciesPage = () => {
   const [searchInput, setSearchInput] = useState("");
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
-  const [sort, setSort] = useState(""); // ✅ sort state
   const limit = 6;
 
    const [debouncedSearch]=useDebounce(searchInput,1000)
@@ -32,7 +31,6 @@ const PoliciesPage = () => {
 
       {/* Filters */}
       <div className="mb-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
-        
         {/* Search Input */}
         <div className="w-full md:w-1/3">
           <Input placeholder='Search By Title' onChange={(e) => setSearchInput(e.target.value)}  value={searchInput} label={'Title'}/>
@@ -51,10 +49,9 @@ const PoliciesPage = () => {
   <Select value={sort} label='Sort By' options={['price-asc','price-desc']} onChange={(e) => setSort(e.target.value)} placeholder='Newest First'/>
 
         </div>
-
       </div>
 
-      {/* Results */}
+      {/* Policy Grid */}
       {isLoading ? (
         <p className="text-center text-gray-500">Loading...</p>
 
@@ -66,7 +63,7 @@ const PoliciesPage = () => {
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {data?.result?.map((policy) => (
-              <PolicyCard baserate={true} key={policy._id} policy={policy} />
+              <PolicyCard key={policy._id} policy={policy} />
             ))}
           </div>
 
@@ -74,9 +71,7 @@ const PoliciesPage = () => {
         
 <Pagination page={page} setPage={setPage} totalPages={totalPages} />
           {isFetching && !isLoading && (
-            <p className="text-center mt-4 text-sm text-gray-500">
-              Loading next page...
-            </p>
+            <p className="text-center mt-4 text-sm text-gray-500">Loading next page...</p>
           )}
         </>
       )}
